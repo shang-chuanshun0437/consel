@@ -1,10 +1,8 @@
 package com.weiyi.lock.request;
 
-public class LoginRequest
+public class VerificationCodeRequest
 {
     private Long userPhone;
-
-    private String password;
 
     public Long getUserPhone() {
         return userPhone;
@@ -12,13 +10,5 @@ public class LoginRequest
 
     public void setUserPhone(Long userPhone) {
         this.userPhone = userPhone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

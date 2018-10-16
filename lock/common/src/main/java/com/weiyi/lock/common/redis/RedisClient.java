@@ -74,7 +74,7 @@ public class RedisClient
      * @param key 键
      */
     public Object get(String key){
-        return key==null?null:redisTemplate.opsForValue().get(key);
+        return key == null ? null : redisTemplate.opsForValue().get(key);
     }
 
     /**
@@ -113,7 +113,7 @@ public class RedisClient
      */
     public boolean set(String key,Object value,long time){
         try {
-            if(time>0){
+            if(time > 0){
                 redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
             }else{
                 set(key, value);
