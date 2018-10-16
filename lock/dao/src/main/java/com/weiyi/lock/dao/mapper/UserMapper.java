@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserMapper
 {
-    void insert(User user);
+    void addUser(User user);
 
     void deleteByPhoneNum(Long userPhone);
 

@@ -11,7 +11,7 @@
         <result column="create_time" property="createTime" jdbcType="VARCHAR" />
     </resultMap>
 
-    <insert id="insert" parameterType="com.weiyi.lock.dao.entity.User">
+    <insert id="addUser" parameterType="com.weiyi.lock.dao.entity.User">
        INSERT INTO
        		users(user_phone,user_name,user_password,user_token,user_email,user_address,create_time)
        	VALUES
@@ -23,7 +23,7 @@
     </delete>
 
     <select id="countByPhone" parameterType="Long" resultType="int">
-        select count(1) from users where user_phone = #{userPhone}
+        select count(*) from users where user_phone = #{userPhone}
     </select>
 
     <select id="queryUserByPhone" parameterType="Long" resultType="com.weiyi.lock.dao.entity.User">
@@ -33,7 +33,7 @@
     <update id="updateUser" parameterType="com.weiyi.lock.dao.entity.User">
         update users
         set
-        user_name = #{userName},user_password = #{userPassword},user_token = #{userToken},userEmail = #{userAddress}
+        user_name = #{userName},user_password = #{userPassword},user_token = #{userToken},user_email = #{userEmail},user_address = #{userAddress}
         where user_phone=#{userPhone}
     </update>
 

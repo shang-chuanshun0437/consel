@@ -6,12 +6,40 @@
         <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
     </resultMap>
 
-    <insert id="insert" parameterType="com.weiyi.lock.dao.entity.Device">
+    <insert id="addDevice" parameterType="com.weiyi.lock.dao.entity.Device">
        INSERT INTO
        		device
-       		(device_num,device_name)
+       		(device_num,device_name,bluetooth_mac,version,create_time,update_time)
        	VALUES
-       		(#{deviceNum}, #{deviceName})
+       		(#{deviceNum}, #{deviceName}, #{bluetoothMac}, #{version}, #{createTime}, #{updateTime})
     </insert>
+
+    <select id="queryCountByDeviceNum" parameterType="Long" resultType="int">
+        select count(*) from device where device_num = #{deviceNum}
+    </select>
+
+    <select id="queryDeviceByDeviceNum" parameterType="Long" resultType="com.weiyi.lock.dao.entity.Device">
+        select * from device where device_num = #{deviceNum}
+    </select>
+
+    <update id="updateDevice" parameterType="com.weiyi.lock.dao.entity.Device">
+        update device
+        <set>
+            <if test="deviceName != null and deviceName != ''">
+                device_name = #{deviceName},
+            </if>
+            <if test="bluetoothMac != null and bluetoothMac != ''">
+                bluetooth_mac = #{bluetoothMac},
+            </if>
+
+            <if test="version != null and version != ''">
+                version = #{version},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime}
+            </if>
+        </set>
+        where device_num = #{deviceNum}
+    </update>
 
 </mapper>

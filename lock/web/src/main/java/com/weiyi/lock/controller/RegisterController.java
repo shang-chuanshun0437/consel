@@ -5,13 +5,12 @@ import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
 import com.weiyi.lock.common.redis.RedisClient;
 import com.weiyi.lock.common.utils.TimeUtil;
-import com.weiyi.lock.dao.entity.User;
-import com.weiyi.lock.request.LoginRequest;
 import com.weiyi.lock.request.RegisterRequest;
 import com.weiyi.lock.request.VerificationCodeRequest;
 import com.weiyi.lock.response.RegisterResponse;
 import com.weiyi.lock.response.VerificationCodeResponse;
 import com.weiyi.lock.service.api.UserService;
+import com.weiyi.lock.service.domain.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -83,13 +82,13 @@ public class RegisterController
         String token = UUID.randomUUID().toString();
 
         //将用户存入数据库
-        User user = new User();
+        UserDTO user = new UserDTO();
         user.setUserPhone(request.getUserPhone());
         user.setUserPassword(request.getPassword());
         user.setUserToken(token);
         user.setCreateTime(TimeUtil.getCurrentTime());
 
-        userService.insert(user);
+        userService.addUser(user);
 
         //将token存入redis缓存
         redisClient.hset(request.getUserPhone() + "",Constant.User.TOKEN,token);

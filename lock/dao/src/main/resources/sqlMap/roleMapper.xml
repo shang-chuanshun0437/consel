@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weiyi.lock.dao.mapper.RoleMapper" >
+    <resultMap id="BaseResultMap" type="com.weiyi.lock.dao.entity.Role" >
+        <id column="user_phone" property="userPhone" jdbcType="BIGINT" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="user_role" property="userRole" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="addRole" parameterType="com.weiyi.lock.dao.entity.Role">
+       INSERT INTO
+       		role (user_phone,user_name,user_role,create_time,update_time)
+       	VALUES
+       		(#{userPhone}, #{userName},#{userRole},#{createTime},#{updateTime})
+    </insert>
+
+    <select id="queryRoleByPhone" parameterType="Long" resultType="com.weiyi.lock.dao.entity.Role">
+        select user_phone,user_name,user_role,create_time,update_time from role where user_phone = #{userPhone}
+    </select>
+
+    <select id="queryUserRoleByPhone" parameterType="Long" resultType="java.lang.String">
+        select user_role from role where user_phone = #{userPhone}
+    </select>
+
+</mapper>

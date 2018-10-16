@@ -1,10 +1,8 @@
 package com.weiyi.lock.request;
 
-public class AddDeviceRequest extends BaseRequest
+public class UpdateDeviceRequest extends BaseRequest
 {
     private Long deviceNum;
-
-    private String deviceName;
 
     private String bluetoothMac;
 
@@ -16,14 +14,6 @@ public class AddDeviceRequest extends BaseRequest
 
     public void setDeviceNum(Long deviceNum) {
         this.deviceNum = deviceNum;
-    }
-
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
     }
 
     public String getBluetoothMac() {

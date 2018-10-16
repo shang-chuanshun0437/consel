@@ -7,13 +7,13 @@ import com.weiyi.lock.common.constant.PermissionCode;
 import com.weiyi.lock.common.redis.RedisClient;
 import com.weiyi.lock.common.utils.LockAssert;
 import com.weiyi.lock.common.utils.LockException;
-import com.weiyi.lock.dao.entity.User;
-import com.weiyi.lock.dao.mapper.UserMapper;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.LoginRequest;
 import com.weiyi.lock.request.LogoutRequest;
 import com.weiyi.lock.response.LoginResponse;
 import com.weiyi.lock.response.LogoutResponse;
+import com.weiyi.lock.service.api.UserService;
+import com.weiyi.lock.service.domain.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class LoginController
     private Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @Autowired
     private RedisClient redisClient;
@@ -56,7 +56,7 @@ public class LoginController
         response.setResult(result);
 
         //根据phone获取数据库用户信息
-        User dbUser = userMapper.queryUserByPhone(request.getUserPhone());
+        UserDTO dbUser = userService.queryUserByPhone(request.getUserPhone());
 
         try
         {
@@ -74,7 +74,7 @@ public class LoginController
         {
             token = UUID.randomUUID().toString();
             dbUser.setUserToken(token);
-            userMapper.updateUser(dbUser);
+            userService.updateUser(dbUser);
             redisClient.hset(request.getUserPhone() + "",Constant.User.TOKEN,token);
         }
 
@@ -104,13 +104,13 @@ public class LoginController
         redisClient.hdel(request.getUserPhone() + "",Constant.User.TOKEN);
 
         //删除数据库中的token
-        User dbUser = userMapper.queryUserByPhone(request.getUserPhone());
+        UserDTO dbUser = userService.queryUserByPhone(request.getUserPhone());
         dbUser.setUserToken(null);
-        userMapper.updateUser(dbUser);
+        userService.updateUser(dbUser);
         return response;
     }
 
-    private void check(LoginRequest request,User dbUser)
+    private void check(LoginRequest request,UserDTO dbUser)
     {
         //校验用户和密码
         String password = request.getPassword();

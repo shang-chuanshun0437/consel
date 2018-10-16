@@ -1,6 +1,6 @@
-package com.weiyi.lock.dao.entity;
+package com.weiyi.lock.service.domain;
 
-public class Device
+public class DeviceDTO
 {
     private Long deviceNum;
 

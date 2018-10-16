@@ -1,28 +1,26 @@
 package com.weiyi.lock.interceptor;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.PermissionCode;
 import com.weiyi.lock.common.redis.RedisClient;
-import com.weiyi.lock.dao.entity.User;
-import com.weiyi.lock.dao.mapper.UserMapper;
 import com.weiyi.lock.request.BaseRequest;
-import com.weiyi.lock.response.AddDeviceResponse;
 import com.weiyi.lock.response.BaseResponse;
+import com.weiyi.lock.service.api.RoleService;
+import com.weiyi.lock.service.api.UserService;
+import com.weiyi.lock.service.domain.RoleDTO;
+import com.weiyi.lock.service.domain.UserDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.servlet.resource.HttpResource;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -41,7 +39,10 @@ import java.util.List;
 public class SecurityInterceptor
 {
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private RedisClient redisClient;
@@ -71,42 +72,57 @@ public class SecurityInterceptor
 
         List<String> annotationValues = Arrays.asList(securityAnnotation.value());
 
-        //只有登录的用户才可以访问该资源
-        if (annotationValues.contains(PermissionCode.USER))
-        {
-            //获取前端传入的参数
-            Object[] args = proceedingJoinPoint.getArgs();
-            BaseRequest baseRequest = (BaseRequest)args[0];
+        //只有登录的用户才可以访问该资源，判断用户是否登录
+        //获取前端传入的参数
+        Object[] args = proceedingJoinPoint.getArgs();
+        BaseRequest baseRequest = (BaseRequest)args[0];
 
-            //去redis缓存中校验token
-            String redisToken = (String)redisClient.hget(baseRequest.getUserPhone() + "",Constant.User.TOKEN);
-            if (redisToken != null && !redisToken.equals(baseRequest.getToken()))
+        //去redis缓存中校验token
+        String redisToken = (String)redisClient.hget(baseRequest.getUserPhone() + "",Constant.User.TOKEN);
+        if (redisToken != null && !redisToken.equals(baseRequest.getToken()))
+        {
+            return buildDeniedResponse(proceedingJoinPoint);
+        }
+
+        //如果redis中没有token，则从数据库中读取token
+        if (redisToken == null)
+        {
+            UserDTO user = userService.queryUserByPhone(baseRequest.getUserPhone());
+            if (user == null || user.getUserToken() == null || !user.getUserToken().equals(baseRequest.getToken()))
             {
                 return buildDeniedResponse(proceedingJoinPoint);
             }
+            //将token存入redis
+            redisClient.hset(baseRequest.getUserPhone() + "",Constant.User.TOKEN,user.getUserToken());
+        }
 
-            //如果redis中没有token，则从数据库中读取token
-            if (redisToken == null)
+        //注解的值为null，说明只要是登录的用户就可以访问
+        if (annotationValues == null || annotationValues.size() == 0)
+        {
+            //调用该方法才会进入注解的方法
+            return proceedingJoinPoint.proceed();
+        }
+        else
+        {
+            //从role角色数据库中获取该用户的角色
+            String userRole = roleService.queryUserRoleByPhone(baseRequest.getUserPhone());
+
+            if (StringUtils.isEmpty(userRole))
             {
-                User user = userMapper.queryUserByPhone(baseRequest.getUserPhone());
-                if (user == null || user.getUserToken() == null || !user.getUserToken().equals(baseRequest.getToken()))
+                return buildDeniedResponse(proceedingJoinPoint);
+            }
+            String[] roles = userRole.split(";");
+            //判断该用户是否具有该权限
+            for (String role : roles)
+            {
+                if (annotationValues.contains(role))
                 {
-                    return buildDeniedResponse(proceedingJoinPoint);
+                    return proceedingJoinPoint.proceed();
                 }
-                //将token存入redis
-                redisClient.hset(baseRequest.getUserPhone() + "",Constant.User.TOKEN,user.getUserToken());
             }
         }
-        //获取登录的用户名，并根据用户名去数据库查询该用户的权限
-        /*String user = request.getRemoteUser();
 
-        if(user == null)
-        {
-            return buildDeniedResponse(proceedingJoinPoint);
-        }*/
-
-        //调用该方法才会进入注解的方法
-        return proceedingJoinPoint.proceed();
+        return buildDeniedResponse(proceedingJoinPoint);
     }
 
     /*
