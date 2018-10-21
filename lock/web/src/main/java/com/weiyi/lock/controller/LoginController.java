@@ -13,7 +13,7 @@ import com.weiyi.lock.request.LogoutRequest;
 import com.weiyi.lock.response.LoginResponse;
 import com.weiyi.lock.response.LogoutResponse;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.domain.UserDTO;
+import com.weiyi.lock.service.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

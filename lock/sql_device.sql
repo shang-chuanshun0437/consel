@@ -1,6 +1,7 @@
 
 CREATE database weiyi;
 
+//设备表
 CREATE TABLE device
 (
     device_num BIGINT NOT NULL comment "设备编号",

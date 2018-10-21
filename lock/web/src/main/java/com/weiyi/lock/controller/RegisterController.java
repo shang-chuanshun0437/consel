@@ -10,7 +10,7 @@ import com.weiyi.lock.request.VerificationCodeRequest;
 import com.weiyi.lock.response.RegisterResponse;
 import com.weiyi.lock.response.VerificationCodeResponse;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.domain.UserDTO;
+import com.weiyi.lock.service.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.UUID;
 
 @Controller

@@ -2,14 +2,12 @@ package com.weiyi.lock.interceptor;
 
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
-import com.weiyi.lock.common.constant.PermissionCode;
 import com.weiyi.lock.common.redis.RedisClient;
 import com.weiyi.lock.request.BaseRequest;
 import com.weiyi.lock.response.BaseResponse;
 import com.weiyi.lock.service.api.RoleService;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.domain.RoleDTO;
-import com.weiyi.lock.service.domain.UserDTO;
+import com.weiyi.lock.service.dto.UserDTO;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -26,8 +24,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
-import java.sql.Array;
 import java.util.Arrays;
 import java.util.List;
 

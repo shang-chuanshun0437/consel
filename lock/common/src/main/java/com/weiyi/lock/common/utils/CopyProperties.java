@@ -7,6 +7,9 @@ import java.util.List;
 
 public class CopyProperties
 {
+    /*
+    * 属性内容赋值
+    */
     public static void copy(Object dest, Object orig)
     {
         try {

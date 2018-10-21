@@ -1,4 +1,4 @@
-
+//用户表
 CREATE TABLE users
 (
     user_phone BIGINT NOT NULL comment "用户手机号",

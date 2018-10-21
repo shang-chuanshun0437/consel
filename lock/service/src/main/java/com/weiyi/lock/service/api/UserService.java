@@ -1,7 +1,6 @@
 package com.weiyi.lock.service.api;
 
-import com.weiyi.lock.dao.entity.User;
-import com.weiyi.lock.service.domain.UserDTO;
+import com.weiyi.lock.service.dto.UserDTO;
 
 public interface UserService
 {
@@ -12,4 +11,6 @@ public interface UserService
     UserDTO queryUserByPhone(Long userPhone);
 
     void updateUser(UserDTO user);
+
+    void updatePassword(Long userPhone,String newPassword,String token);
 }

@@ -1,9 +1,6 @@
 package com.weiyi.lock.service.api;
 
-import com.weiyi.lock.dao.entity.Role;
-import com.weiyi.lock.service.domain.RoleDTO;
-
-import java.util.List;
+import com.weiyi.lock.service.dto.RoleDTO;
 
 public interface RoleService
 {

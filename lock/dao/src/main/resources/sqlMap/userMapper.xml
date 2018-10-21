@@ -32,8 +32,24 @@
 
     <update id="updateUser" parameterType="com.weiyi.lock.dao.entity.User">
         update users
-        set
-        user_name = #{userName},user_password = #{userPassword},user_token = #{userToken},user_email = #{userEmail},user_address = #{userAddress}
+        <set>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="userToken != null and userToken != ''">
+                user_token = #{userToken},
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                user_password = #{userPassword},
+            </if>
+
+            <if test="userEmail != null and userEmail != ''">
+                user_email = #{userEmail},
+            </if>
+            <if test="userAddress != null and userAddress != ''">
+                user_address = #{userAddress}
+            </if>
+        </set>
         where user_phone=#{userPhone}
     </update>
 

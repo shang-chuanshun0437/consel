@@ -2,13 +2,10 @@ package com.weiyi.lock.service.impl;
 
 import com.weiyi.lock.common.redis.RedisClient;
 import com.weiyi.lock.common.utils.CopyProperties;
-import com.weiyi.lock.dao.entity.Device;
 import com.weiyi.lock.dao.entity.User;
-import com.weiyi.lock.dao.mapper.DeviceMapper;
 import com.weiyi.lock.dao.mapper.UserMapper;
-import com.weiyi.lock.service.api.DeviceService;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.domain.UserDTO;
+import com.weiyi.lock.service.dto.UserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +71,21 @@ public class UserServiceSpi implements UserService
         }
         User user = new User();
         CopyProperties.copy(user,userDTO);
+        userMapper.updateUser(user);
+    }
+
+    public void updatePassword(Long userPhone,String newPassword,String token)
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter updatePassword() func,phoneNum:{}",userPhone);
+        }
+        User user = new User();
+
+        user.setUserToken(token);
+        user.setUserPhone(userPhone);
+        user.setUserPassword(newPassword);
+
         userMapper.updateUser(user);
     }
 }

@@ -9,5 +9,11 @@ public class Constant
 
         //key : token
         public static final String TOKEN = "token";
+
+        //设备的用户类型：管理员
+        public static final String USER_TYPE_ADMIN = "0";
+
+        //设备的用户类型：普通用户
+        public static final String USER_TYPE_COMMON = "1";
     }
 }

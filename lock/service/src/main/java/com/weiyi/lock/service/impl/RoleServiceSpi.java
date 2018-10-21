@@ -4,14 +4,11 @@ import com.weiyi.lock.common.utils.CopyProperties;
 import com.weiyi.lock.dao.entity.Role;
 import com.weiyi.lock.dao.mapper.RoleMapper;
 import com.weiyi.lock.service.api.RoleService;
-import com.weiyi.lock.service.domain.RoleDTO;
+import com.weiyi.lock.service.dto.RoleDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class RoleServiceSpi implements RoleService

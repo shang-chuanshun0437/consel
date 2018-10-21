@@ -23,4 +23,16 @@ public class ErrorCode
     //设备已存在管理员，不允许后台维护人员修改
     public static final int OWNER_USER_EXIST = 1006;
 
+    //设备不存在或设备已存在管理员，则不允许绑定
+    public static final int BIND_DEVICE_ERROR = 1007;
+
+    //解绑设备失败
+    public static final int UNBIND_DEVICE_ERROR = 1008;
+
+    //管理员解绑解绑设备，设备下还存在其他用户，解绑失败
+    public static final int OTHER_USERS_EXIST = 1009;
+
+    //设备不存在
+    public static final int DEVICE_NOT_EXIST = 1010;
+
 }

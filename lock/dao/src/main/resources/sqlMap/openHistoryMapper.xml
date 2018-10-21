@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weiyi.lock.dao.mapper.OpenDoorHistoryMapper" >
+    <resultMap id="BaseResultMap" type="com.weiyi.lock.dao.entity.OpenDoorHistory" >
+        <id column="id" property="id" jdbcType="int" />
+        <result column="user_phone" property="userPhone" jdbcType="BIGINT" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="device_num" property="deviceNum" jdbcType="BIGINT" />
+        <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+        <result column="open_time" property="openTime" jdbcType="CHAR" />
+    </resultMap>
+
+    <insert id="addHistory" parameterType="com.weiyi.lock.dao.entity.OpenDoorHistory">
+       INSERT INTO
+       		open_history (user_phone,user_name,device_num,device_name,open_time)
+       	VALUES
+       		(#{userPhone},#{userName}, #{deviceNum},#{deviceName},#{openTime})
+    </insert>
+
+    <select id="queryOpenHistory" parameterType="com.weiyi.lock.dao.domain.OpenDoorListDomain" resultType="BaseResultMap">
+        select * from open_history
+        <where>
+            <if test="deviceNum != null and deviceNum != ''">
+                device_num = #{deviceNum}
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                AND user_phone = #{userPhone}
+            </if>
+            <if test="version != null and version != ''">
+                AND version = #{version}
+            </if>
+            <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+                AND create_time between #{startTime} and #{endTime}
+            </if>
+            <if test="pageIndex != null and pageIndex != ''">
+                ORDER BY create_time DESC
+                limit #{pageIndex} : 10
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

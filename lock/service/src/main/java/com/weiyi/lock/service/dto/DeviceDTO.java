@@ -1,4 +1,4 @@
-package com.weiyi.lock.service.domain;
+package com.weiyi.lock.service.dto;
 
 public class DeviceDTO
 {
@@ -18,7 +18,6 @@ public class DeviceDTO
     private String createTime;
 
     private String updateTime;
-
 
     public Long getDeviceNum() {
         return deviceNum;

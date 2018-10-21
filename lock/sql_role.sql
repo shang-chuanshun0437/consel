@@ -1,4 +1,4 @@
-
+//角色控制表
 CREATE TABLE role
 (
     user_phone BIGINT NOT NULL comment "用户手机号",

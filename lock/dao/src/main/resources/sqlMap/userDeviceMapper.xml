@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weiyi.lock.dao.mapper.UserAssociateDeviceMapper" >
+    <resultMap id="BaseResultMap" type="com.weiyi.lock.dao.entity.UserAssociateDevice" >
+        <id column="id" property="id" jdbcType="int" />
+        <result column="user_phone" property="userPhone" jdbcType="BIGINT" />
+        <result column="device_num" property="deviceNum" jdbcType="BIGINT" />
+        <result column="user_type" property="userType" jdbcType="CHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="bindDevice" parameterType="com.weiyi.lock.dao.entity.UserAssociateDevice">
+       INSERT INTO
+       		user_device(user_phone,device_num,user_type,create_time,update_time)
+       	VALUES
+       		(#{userPhone}, #{deviceNum},#{userType},#{createTime},#{updateTime})
+    </insert>
+
+    <select id="queryDeviceCountByNum" parameterType="Long" resultType="int">
+        select count(*) from user_device where device_num = #{deviceNum}
+    </select>
+
+    <delete id="deleteByPhoneAndNum" parameterType="com.weiyi.lock.dao.entity.UserAssociateDevice">
+        delete from user_device where device_num = #{deviceNum} and user_phone = #{userPhone}
+    </delete>
+
+</mapper>

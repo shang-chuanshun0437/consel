@@ -1,18 +1,14 @@
 package com.weiyi.lock.controller;
 
 import com.weiyi.lock.common.Result;
-import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
 import com.weiyi.lock.common.constant.PermissionCode;
 import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
-import com.weiyi.lock.request.AddDeviceRequest;
 import com.weiyi.lock.request.AddRoleRequest;
-import com.weiyi.lock.response.AddDeviceResponse;
 import com.weiyi.lock.response.AddRoleResponse;
-import com.weiyi.lock.service.api.DeviceService;
 import com.weiyi.lock.service.api.RoleService;
-import com.weiyi.lock.service.domain.RoleDTO;
+import com.weiyi.lock.service.dto.RoleDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

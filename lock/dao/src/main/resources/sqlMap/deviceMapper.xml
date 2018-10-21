@@ -22,6 +22,30 @@
         select * from device where device_num = #{deviceNum}
     </select>
 
+    <select id="queryDeviceList" parameterType="com.weiyi.lock.dao.domain.DeviceListDomain" resultType="BaseResultMap">
+        select * from device
+        <where>
+            <if test="deviceNum != null and deviceNum != ''">
+                device_num = #{deviceNum}
+            </if>
+            <if test="ownerPhone != null and ownerPhone != ''">
+                AND owner_phone = #{ownerPhone}
+            </if>
+            <if test="version != null and version != ''">
+                AND version = #{version}
+            </if>
+            <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+                AND create_time between #{startTime} and #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="userQueryDeviceList" parameterType="Long" resultType="BaseResultMap">
+        SELECT d.device_num,d.device_name,d.bluetooth_mac,d.version,d.create_time,d.update_time ,d.owner_phone
+        FROM device d ,user_device u
+        WHERE u.user_phone = #{userPhone} AND d.device_num = u.device_num
+    </select>
+
     <update id="updateDevice" parameterType="com.weiyi.lock.dao.entity.Device">
         update device
         <set>
@@ -41,5 +65,15 @@
         </set>
         where device_num = #{deviceNum}
     </update>
+
+    <update id="updateOwner" parameterType="com.weiyi.lock.dao.entity.Device">
+        update device
+        set owner_phone = #{ownerPhone}
+        where device_num = #{deviceNum}
+    </update>
+
+    <delete id="deleteDevice" parameterType="Long">
+        delete from device where device_num = #{deviceNum}
+    </delete>
 
 </mapper>

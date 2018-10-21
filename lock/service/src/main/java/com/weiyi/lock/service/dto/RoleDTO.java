@@ -1,4 +1,4 @@
-package com.weiyi.lock.service.domain;
+package com.weiyi.lock.service.dto;
 
 public class RoleDTO
 {
