@@ -7,5 +7,5 @@ CREATE TABLE open_history
     device_num BIGINT NOT NULL comment "设备编号",
     device_name VARCHAR (36) comment "设备名称",
     open_time CHAR (14) comment "开门时间,格式为20181015095546，表示2018-10-15 09:55:46",
-    PRIMARY KEY (id),
+    PRIMARY KEY (id)
 );

@@ -20,7 +20,7 @@ public class SendMsg
 	private static final String URL = "http://api.smsbao.com/sms";
 
 	//短信验证码的前缀，可修改
-	private static final String PREFIX = "【LF】您的验证码为 ";
+	private static final String PREFIX = "【LF LTD】您的验证码为 ";
 
 	//短信验证码的后缀，可修改
 	private static final String SUFFIX = "。此验证码15分钟内有效。提醒您：请勿将此验证码提供给其他人，以保障您的使用安全。";
