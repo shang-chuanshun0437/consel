@@ -7,22 +7,21 @@ public class Test
 {
     public static void main(String[] args)
     {
-        String signName = "欧亚总代理";
-        String templateCode = "SMS_148591459";
-        String phoneNum = "18753137390";
-        String msgCode = "789456";
+        String phone = "18753137390";
+        String msgCode = "1234";
 
-        String ret = AliDayunSms.sendMsg(signName,templateCode,phoneNum,msgCode);
-        if (ret != null && ret.equals("OK"))
+        String result = SendMsg.send(phone,msgCode);
+
+        if (result != null && result.equals("0"))
         {
             //短信发送成功
-            //TODO 做你们自己的业务逻辑处理
+            //TODO 做贵公司自己的业务逻辑处理
         }
         else
         {
             //短信发送失败
-            //TODO 做你们自己的业务逻辑处理
-            System.out.println(ret);
+            //TODO 做贵公司自己的业务逻辑处理
+            System.out.println(result);
         }
 
     }
