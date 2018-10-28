@@ -4,6 +4,11 @@
     <resultMap id="BaseResultMap" type="com.weiyi.lock.dao.entity.Device" >
         <id column="device_num" property="deviceNum" jdbcType="BIGINT" />
         <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
+        <result column="bluetooth_mac" property="bluetoothMac" jdbcType="VARCHAR" />
+        <result column="owner_phone" property="ownerPhone" jdbcType="BIGINT" />
+        <result column="version" property="version" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     </resultMap>
 
     <insert id="addDevice" parameterType="com.weiyi.lock.dao.entity.Device">
@@ -22,7 +27,7 @@
         select * from device where device_num = #{deviceNum}
     </select>
 
-    <select id="queryDeviceList" parameterType="com.weiyi.lock.dao.domain.DeviceListDomain" resultType="BaseResultMap">
+    <select id="queryDeviceList" parameterType="com.weiyi.lock.dao.domain.DeviceListDomain" resultType="com.weiyi.lock.dao.entity.Device">
         select * from device
         <where>
             <if test="deviceNum != null and deviceNum != ''">
@@ -40,7 +45,7 @@
         </where>
     </select>
 
-    <select id="userQueryDeviceList" parameterType="Long" resultType="BaseResultMap">
+    <select id="userQueryDeviceList" parameterType="Long" resultType="com.weiyi.lock.dao.entity.Device">
         SELECT d.device_num,d.device_name,d.bluetooth_mac,d.version,d.create_time,d.update_time ,d.owner_phone
         FROM device d ,user_device u
         WHERE u.user_phone = #{userPhone} AND d.device_num = u.device_num
