@@ -29,4 +29,11 @@
         delete from user_device where device_num = #{deviceNum} and user_phone = #{userPhone}
     </delete>
 
+    <select id="queryCountByNumAndPhone" parameterType="com.weiyi.lock.dao.entity.UserAssociateDevice"
+            resultType="int">
+        select count(*)
+        from user_device
+        where device_num = #{deviceNum} and user_phone = #{userPhone}
+    </select>
+
 </mapper>

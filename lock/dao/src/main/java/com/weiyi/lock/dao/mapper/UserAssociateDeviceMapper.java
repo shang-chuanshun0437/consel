@@ -11,4 +11,6 @@ public interface UserAssociateDeviceMapper
     int queryDeviceCountByNum(Long deviceNum);
 
     void deleteByPhoneAndNum(UserAssociateDevice userAssociateDevice);
+
+    int queryCountByNumAndPhone(UserAssociateDevice userAssociateDevice);
 }

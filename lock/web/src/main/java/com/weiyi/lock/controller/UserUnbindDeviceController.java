@@ -47,6 +47,7 @@ public class UserUnbindDeviceController
     @RequestMapping(value = "/unbindDevice",method = {RequestMethod.POST})
     @ResponseBody
     @SecurityAnnotation()
+    @Transactional
     public UnbindDeviceResponse unbindDevice(@RequestBody UnbindDeviceRequest request)
     {
         UnbindDeviceResponse response = new UnbindDeviceResponse();
@@ -79,7 +80,7 @@ public class UserUnbindDeviceController
                 result.setRetMsg("the device has other users.");
                 return response;
             }
-            //如果是管理员，则只需要将设备表中的owner_phone字段设置为null
+            //如果是管理员，则需要将设备表中的owner_phone字段设置为null
             dbDevice.setUserCount(0);
             dbDevice.setOwnerPhone(null);
             dbDevice.setUpdateTime(TimeUtil.getCurrentTime());
@@ -89,6 +90,9 @@ public class UserUnbindDeviceController
         }
 
         //如果是非管理员则删除用户设备关联表的记录
+        dbDevice.setUserCount(dbDevice.getUserCount() - 1);
+        deviceService.updateDevice(dbDevice);
+
         userAssociateDeviceService.deleteByPhoneAndNum(request.getUserPhone(),request.getDeviceNum());
 
         return response;

@@ -4,7 +4,7 @@ import com.weiyi.lock.dao.entity.UserAssociateDevice;
 import com.weiyi.lock.dao.mapper.UserAssociateDeviceMapper;
 import com.weiyi.lock.service.api.UserAssociateDeviceService;
 import com.weiyi.lock.service.request.AddDevice4UserRequest;
-import com.weiyi.lock.service.response.GetUserAssociateDeviceInfoRes;
+import com.weiyi.lock.service.request.GetUserDeviceByNumReq;
 import com.weiyi.lock.service.response.GetUserDeviceByNumRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,9 +43,14 @@ public class UserAssociateDeviceSpi implements UserAssociateDeviceService
         mapper.deleteByPhoneAndNum(userAssociateDevice);
     }
 
-    public GetUserDeviceByNumRes queryByNumAndPhone(Long deviceNum, Long userPhone) {
-        return 0;
-    }
+    public int queryByNumAndPhone(GetUserDeviceByNumReq request)
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter deleteByPhoneAndNum() func,the device num:{}",request.getDeviceNum());
+        }
 
+        return mapper.queryCountByNumAndPhone(request);
+    }
 
 }

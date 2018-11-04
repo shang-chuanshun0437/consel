@@ -10,8 +10,10 @@ import com.weiyi.lock.service.api.DeviceService;
 import com.weiyi.lock.service.api.UserAssociateDeviceService;
 import com.weiyi.lock.service.api.UserService;
 import com.weiyi.lock.service.request.AddDevice4UserRequest;
+import com.weiyi.lock.service.request.GetUserDeviceByNumReq;
 import com.weiyi.lock.service.response.GetDeviceInfoResponse;
 import com.weiyi.lock.service.response.GetUserAssociateDeviceInfoRes;
+import com.weiyi.lock.service.response.GetUserDeviceByNumRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,11 +126,18 @@ public class UserBindDeviceController
         }
 
         //查询该用户是否已经绑定
+        GetUserDeviceByNumReq getUserDeviceByNumReq = new GetUserDeviceByNumReq();
+        getUserDeviceByNumReq.setDeviceNum(request.getDeviceNum());
+        getUserDeviceByNumReq.setUserPhone(request.getNeedBindPhone());
 
-        userAssociateDeviceService.queryByNumAndPhone();
-        //更新device表
-        deviceDb.setUserCount(deviceDb.getUserCount() + 1);
-        deviceService.updateDevice(deviceDb);
+        int total = userAssociateDeviceService.queryByNumAndPhone(getUserDeviceByNumReq);
+        if (total <= 0)
+        {
+            //用户未绑定该设备
+            //更新device表
+            deviceDb.setUserCount(deviceDb.getUserCount() + 1);
+            deviceService.updateDevice(deviceDb);
+        }
 
         //更新用户设备关联表
         AddDevice4UserRequest addDevice4UserRequest = new AddDevice4UserRequest();
