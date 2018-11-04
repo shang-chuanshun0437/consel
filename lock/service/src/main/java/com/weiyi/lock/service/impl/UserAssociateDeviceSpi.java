@@ -3,7 +3,9 @@ package com.weiyi.lock.service.impl;
 import com.weiyi.lock.dao.entity.UserAssociateDevice;
 import com.weiyi.lock.dao.mapper.UserAssociateDeviceMapper;
 import com.weiyi.lock.service.api.UserAssociateDeviceService;
-import com.weiyi.lock.service.dto.UserAssociateDeviceDTO;
+import com.weiyi.lock.service.request.AddDevice4UserRequest;
+import com.weiyi.lock.service.response.GetUserAssociateDeviceInfoRes;
+import com.weiyi.lock.service.response.GetUserDeviceByNumRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +19,14 @@ public class UserAssociateDeviceSpi implements UserAssociateDeviceService
     @Autowired
     private UserAssociateDeviceMapper mapper;
 
-    public void bindDevice(UserAssociateDeviceDTO userAssociateDeviceDTO)
+    public void bindDevice(AddDevice4UserRequest addDevice4UserRequest)
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter bindDevice() func,the device num:{}",userAssociateDeviceDTO.getDeviceNum());
+            logger.debug("inter bindDevice() func,the device num:{}", addDevice4UserRequest.getDeviceNum());
         }
 
-        mapper.bindDevice(userAssociateDeviceDTO);
+        mapper.bindDevice(addDevice4UserRequest);
     }
 
     public void deleteByPhoneAndNum(Long userPhone, Long deviceNum)
@@ -41,13 +43,9 @@ public class UserAssociateDeviceSpi implements UserAssociateDeviceService
         mapper.deleteByPhoneAndNum(userAssociateDevice);
     }
 
-    public int queryDeviceCountByNum(Long deviceNum)
-    {
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("inter queryDeviceCountByNum() func,the device num:{}",deviceNum);
-        }
-
-        return mapper.queryDeviceCountByNum(deviceNum);
+    public GetUserDeviceByNumRes queryByNumAndPhone(Long deviceNum, Long userPhone) {
+        return 0;
     }
+
+
 }

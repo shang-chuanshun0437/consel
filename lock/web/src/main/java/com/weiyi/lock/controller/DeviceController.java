@@ -1,6 +1,7 @@
 package com.weiyi.lock.controller;
 
 import com.weiyi.lock.common.Result;
+import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
 import com.weiyi.lock.common.constant.PermissionCode;
 import com.weiyi.lock.common.utils.TimeUtil;
@@ -8,8 +9,10 @@ import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.*;
 import com.weiyi.lock.response.*;
 import com.weiyi.lock.service.api.DeviceService;
-import com.weiyi.lock.service.dto.DeviceDTO;
-import com.weiyi.lock.service.dto.DeviceListDTO;
+import com.weiyi.lock.service.request.GetUnManageDeviceRequest;
+import com.weiyi.lock.service.response.GetDeviceInfoResponse;
+import com.weiyi.lock.service.request.GetManageDeviceRequest;
+import com.weiyi.lock.service.response.GetUnManageDeviceRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-/*
-* 后台管理人员，对设备的操作
-*/
 @Controller
 @RequestMapping("/device")
 public class DeviceController
@@ -62,7 +62,7 @@ public class DeviceController
             }
         }
 
-        DeviceDTO device = new DeviceDTO();
+        GetDeviceInfoResponse device = new GetDeviceInfoResponse();
         device.setDeviceName(request.getDeviceName());
         device.setDeviceNum(request.getDeviceNum());
         device.setBluetoothMac(request.getBluetoothMac());
@@ -94,25 +94,25 @@ public class DeviceController
         }
 
         //去查询设备，如果设备下已存在ownerPhone，则不允许后台人员进行修改
-        DeviceDTO deviceDb = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
+        GetDeviceInfoResponse deviceDb = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
         if(deviceDb == null || deviceDb.getOwnerPhone() != null)
         {
             result.setRetCode(ErrorCode.OWNER_USER_EXIST);
             result.setRetMsg("the device has owner user.");
             return response;
         }
-        DeviceDTO deviceDTO = new DeviceDTO();
+        GetDeviceInfoResponse getDeviceInfoResponse = new GetDeviceInfoResponse();
 
-        deviceDTO.setDeviceNum(request.getDeviceNum());
-        deviceDTO.setBluetoothMac(request.getBluetoothMac());
-        deviceDTO.setVersion(request.getVersion());
-        deviceDTO.setUpdateTime(TimeUtil.getCurrentTime());
+        getDeviceInfoResponse.setDeviceNum(request.getDeviceNum());
+        getDeviceInfoResponse.setBluetoothMac(request.getBluetoothMac());
+        getDeviceInfoResponse.setVersion(request.getVersion());
+        getDeviceInfoResponse.setUpdateTime(TimeUtil.getCurrentTime());
 
-        deviceService.updateDevice(deviceDTO);
+        deviceService.updateDevice(getDeviceInfoResponse);
         return response;
     }
 
-    /*
+    /*后台管理人员
     *根据设备编号删除设备
     * 如果该设备下有用户，则不能删除
     */
@@ -131,7 +131,7 @@ public class DeviceController
         }
 
         //去查询设备，如果设备下已存在ownerPhone，则不允许后台人员删除设备
-        DeviceDTO deviceDb = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
+        GetDeviceInfoResponse deviceDb = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
         if(deviceDb == null || deviceDb.getOwnerPhone() != null)
         {
             result.setRetCode(ErrorCode.OWNER_USER_EXIST);
@@ -163,19 +163,23 @@ public class DeviceController
         }
 
         //填充查询数据
-        DeviceListDTO deviceListDTO = new DeviceListDTO();
-
-        deviceListDTO.setDeviceNum(request.getDeviceNum());
-        deviceListDTO.setVersion(request.getVersion());
-        deviceListDTO.setStartTime(request.getStartTime());
-        deviceListDTO.setEndTime(request.getEndTime());
-        deviceListDTO.setOwnerPhone(request.getOwnerPhone());
-
-        List<DeviceDTO> deviceDTOS = deviceService.queryDeviceList(deviceListDTO);
-
-        if (deviceDTOS != null && deviceDTOS.size() > 0)
+        if (request.getCurrentPage() == null || request.getCurrentPage().intValue() <= 0)
         {
-            response.setDeviceDTOS(deviceDTOS.toArray(new DeviceDTO[deviceDTOS.size()]));
+            request.setCurrentPage(1);
+        }
+        GetManageDeviceRequest getManageDeviceRequest = new GetManageDeviceRequest();
+
+        getManageDeviceRequest.setDeviceNum(request.getDeviceNum());
+        getManageDeviceRequest.setDeviceName(request.getDeviceName());
+        getManageDeviceRequest.setCurrentPage(request.getCurrentPage());
+        getManageDeviceRequest.setVersion(request.getVersion());
+        getManageDeviceRequest.setOwnerPhone(request.getOwnerPhone());
+
+        List<GetDeviceInfoResponse> getDeviceInfoResponses = deviceService.queryManageDevice(getManageDeviceRequest);
+
+        if (getDeviceInfoResponses != null && getDeviceInfoResponses.size() > 0)
+        {
+            response.setGetDeviceInfoResponses(getDeviceInfoResponses.toArray(new GetDeviceInfoResponse[getDeviceInfoResponses.size()]));
         }
 
         return response;
@@ -184,34 +188,41 @@ public class DeviceController
     /*
      *根据查询条件，查询用户管理的设备
      */
-    @RequestMapping(value = "/admin/queryDeviceList",method = {RequestMethod.POST})
+    @RequestMapping(value = "/manage/queryDeviceList",method = {RequestMethod.POST})
     @ResponseBody
     @SecurityAnnotation()
-    public AdminQueryDeviceResponse adminQueryDeviceList(@RequestBody AdminQueryDeviceRequest request)
+    public QueryManageDeviceResponse queryManageDeviceList(@RequestBody QueryManageDeviceRequest request)
     {
-        AdminQueryDeviceResponse response = new AdminQueryDeviceResponse();
+        QueryManageDeviceResponse response = new QueryManageDeviceResponse();
         Result result = new Result();
         response.setResult(result);
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter deleteDevice() func ,the user is:{}", request.getUserPhone());
+            logger.debug("inter queryManageDeviceList() func ,the user is:{}", request.getUserPhone());
         }
 
         //填充查询数据
-        DeviceListDTO deviceListDTO = new DeviceListDTO();
-
-        deviceListDTO.setDeviceNum(request.getDeviceNum());
-        deviceListDTO.setVersion(request.getVersion());
-        deviceListDTO.setStartTime(request.getStartTime());
-        deviceListDTO.setEndTime(request.getEndTime());
-        deviceListDTO.setOwnerPhone(request.getUserPhone());
-
-        List<DeviceDTO> deviceDTOS = deviceService.queryDeviceList(deviceListDTO);
-
-        if (deviceDTOS != null && deviceDTOS.size() > 0)
+        if (request.getCurrentPage() == null || request.getCurrentPage().intValue() <= 0)
         {
-            response.setDeviceDTOS(deviceDTOS.toArray(new DeviceDTO[deviceDTOS.size()]));
+            request.setCurrentPage(1);
+        }
+        GetManageDeviceRequest getManageDeviceRequest = new GetManageDeviceRequest();
+
+        getManageDeviceRequest.setDeviceNum(request.getDeviceNum());
+        getManageDeviceRequest.setDeviceName(request.getDeviceName());
+        getManageDeviceRequest.setCurrentPage( (request.getCurrentPage() - 1 )*Constant.PAGE_SIZE);
+        getManageDeviceRequest.setOwnerPhone(request.getUserPhone());
+
+        //查询总数量
+        int total = deviceService.queryManageDeviceCount(getManageDeviceRequest);
+        response.setCount(total);
+
+        List<GetDeviceInfoResponse> getDeviceInfoResponses = deviceService.queryManageDevice(getManageDeviceRequest);
+
+        if (getDeviceInfoResponses != null && getDeviceInfoResponses.size() > 0)
+        {
+            response.setGetDeviceInfoResponses(getDeviceInfoResponses.toArray(new GetDeviceInfoResponse[getDeviceInfoResponses.size()]));
         }
 
         return response;
@@ -220,27 +231,80 @@ public class DeviceController
     /*
      *根据查询条件，查询用户下的设备（不包括管理的设备）
      */
-    @RequestMapping(value = "/user/queryDeviceList",method = {RequestMethod.POST})
+    @RequestMapping(value = "/unManage/queryDeviceList",method = {RequestMethod.POST})
     @ResponseBody
     @SecurityAnnotation()
-    public UserQueryDeviceResponse userQueryDeviceList(@RequestBody UserQueryDeviceRequest request)
+    public QueryUnManageDeviceResponse queryUnManageDevice(@RequestBody QueryUnManageDeviceRequest request)
     {
-        UserQueryDeviceResponse response = new UserQueryDeviceResponse();
+        QueryUnManageDeviceResponse response = new QueryUnManageDeviceResponse();
         Result result = new Result();
         response.setResult(result);
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter deleteDevice() func ,the user is:{}", request.getUserPhone());
+            logger.debug("inter queryUnManageDeviceList() func ,the user is:{}", request.getUserPhone());
         }
 
-        List<DeviceDTO> deviceDTOS = deviceService.userQueryDeviceList(request.getUserPhone());
-
-        if (deviceDTOS != null && deviceDTOS.size() > 0)
+        //填充查询数据
+        if (request.getCurrentPage() == null || request.getCurrentPage().intValue() <= 0)
         {
-            response.setDeviceDTOS(deviceDTOS.toArray(new DeviceDTO[deviceDTOS.size()]));
+            request.setCurrentPage(1);
+        }
+        GetUnManageDeviceRequest getManageDeviceRequest = new GetUnManageDeviceRequest();
+
+        getManageDeviceRequest.setDeviceNum(request.getDeviceNum());
+        getManageDeviceRequest.setDeviceName(request.getDeviceName());
+        getManageDeviceRequest.setCurrentPage( (request.getCurrentPage() - 1 )*Constant.PAGE_SIZE);
+        getManageDeviceRequest.setUserPhone(request.getUserPhone());
+        getManageDeviceRequest.setOwnerPhone(request.getOwnerPhone());
+
+        //查询总数量
+        int total = deviceService.queryUnManageDeviceCount(getManageDeviceRequest);
+        response.setCount(total);
+
+        //查询设备列表
+        List<GetUnManageDeviceRes> getUnManageDeviceRes = deviceService.queryUnManageDevice(getManageDeviceRequest);
+
+        if (getUnManageDeviceRes != null && getUnManageDeviceRes.size() > 0)
+        {
+            response.setGetUnManageDeviceRes(getUnManageDeviceRes.toArray(new GetUnManageDeviceRes[getUnManageDeviceRes.size()]));
         }
 
+        return response;
+    }
+
+    /*
+     *设备管理员，修改设备名称
+     */
+    @RequestMapping(value = "/modify/deviceName",method = {RequestMethod.POST})
+    @ResponseBody
+    @SecurityAnnotation()
+    public ModifyDeviceNameResponse modifyDeviceName(@RequestBody ModifyDeviceNameRequest request)
+    {
+        ModifyDeviceNameResponse response = new ModifyDeviceNameResponse();
+        Result result = new Result();
+        response.setResult(result);
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter modifyDeviceName() func ,the device num:{}", request.getDeviceNum());
+        }
+
+        //去查询设备，如果设备下已存在ownerPhone，则不允许后台人员进行修改
+        GetDeviceInfoResponse deviceDb = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
+        if(deviceDb.getDeviceNum() == null || deviceDb.getOwnerPhone() == null || !deviceDb.getOwnerPhone().equals(request.getUserPhone()))
+        {
+            result.setRetCode(ErrorCode.DEVICE_NUM_ERROR);
+            result.setRetMsg("the device num is error.");
+            return response;
+        }
+        GetDeviceInfoResponse getDeviceInfoResponse = new GetDeviceInfoResponse();
+
+        getDeviceInfoResponse.setDeviceNum(request.getDeviceNum());
+        getDeviceInfoResponse.setDeviceName(request.getDeviceName());
+        getDeviceInfoResponse.setUpdateTime(TimeUtil.getCurrentTime());
+
+        deviceService.updateDevice(getDeviceInfoResponse);
         return response;
     }
 }

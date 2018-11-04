@@ -1,13 +1,13 @@
 package com.weiyi.lock.service.api;
 
 import com.weiyi.lock.dao.entity.OpenDoorListDTO;
-import com.weiyi.lock.service.dto.OpenDoorHistoryDTO;
+import com.weiyi.lock.service.response.GetOpenDoorHistoryInfoRes;
 
 import java.util.List;
 
 public interface OpenDoorHistoryService
 {
-    void addHistory(OpenDoorHistoryDTO openDoorHistoryDTO);
+    void addHistory(GetOpenDoorHistoryInfoRes getOpenDoorHistoryInfoRes);
 
-    List<OpenDoorHistoryDTO> queryOpenHistory(OpenDoorListDTO openDoorListDTO);
+    List<GetOpenDoorHistoryInfoRes> queryOpenHistory(OpenDoorListDTO openDoorListDTO);
 }

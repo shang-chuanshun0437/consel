@@ -1,7 +1,6 @@
 package com.weiyi.lock.controller;
 
 import com.weiyi.lock.common.Result;
-import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
 import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
@@ -10,8 +9,9 @@ import com.weiyi.lock.response.*;
 import com.weiyi.lock.service.api.DeviceService;
 import com.weiyi.lock.service.api.UserAssociateDeviceService;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.dto.DeviceDTO;
-import com.weiyi.lock.service.dto.UserAssociateDeviceDTO;
+import com.weiyi.lock.service.request.AddDevice4UserRequest;
+import com.weiyi.lock.service.response.GetDeviceInfoResponse;
+import com.weiyi.lock.service.response.GetUserAssociateDeviceInfoRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,6 @@ public class UserBindDeviceController
     @RequestMapping(value = "/bindDevice",method = {RequestMethod.POST})
     @ResponseBody
     @SecurityAnnotation()
-    @Transactional
     public BindDeviceResponse bindDevice(@RequestBody BindDeviceRequest request)
     {
         BindDeviceResponse response = new BindDeviceResponse();
@@ -59,10 +58,10 @@ public class UserBindDeviceController
         }
 
         //根据设备ID，获取设备
-        DeviceDTO dbDevice = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
+        GetDeviceInfoResponse dbDevice = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
 
         //判断设备是否存在，以及是否存在管理员
-        if (dbDevice == null || dbDevice.getOwnerPhone() != null)
+        if (dbDevice.getDeviceNum() == null || dbDevice.getOwnerPhone() != null)
         {
             result.setRetCode(ErrorCode.BIND_DEVICE_ERROR);
             result.setRetMsg("please input correct device num.");
@@ -72,20 +71,10 @@ public class UserBindDeviceController
         dbDevice.setOwnerPhone(request.getUserPhone());
         dbDevice.setDeviceName(request.getDeviceName());
         dbDevice.setUpdateTime(TimeUtil.getCurrentTime());
-
+        dbDevice.setUserCount(dbDevice.getUserCount() + 1);
         //更新设备表
         deviceService.updateDevice(dbDevice);
 
-        //更新用户设备关联表
-        UserAssociateDeviceDTO userAssociateDeviceDTO = new UserAssociateDeviceDTO();
-
-        userAssociateDeviceDTO.setUserPhone(request.getUserPhone());
-        userAssociateDeviceDTO.setDeviceNum(request.getDeviceNum());
-        userAssociateDeviceDTO.setUserType(Constant.User.USER_TYPE_ADMIN);
-        userAssociateDeviceDTO.setCreateTime(TimeUtil.getCurrentTime());
-        userAssociateDeviceDTO.setUpdateTime(userAssociateDeviceDTO.getCreateTime());
-
-        userAssociateDeviceService.bindDevice(userAssociateDeviceDTO);
         return response;
     }
 
@@ -97,6 +86,7 @@ public class UserBindDeviceController
     @RequestMapping(value = "/bindDevice4User",method = {RequestMethod.POST})
     @ResponseBody
     @SecurityAnnotation()
+    @Transactional
     public BindDevice4UserResponse bindDevice4User(@RequestBody BindDevice4UserRequest request)
     {
         BindDevice4UserResponse response = new BindDevice4UserResponse();
@@ -119,7 +109,7 @@ public class UserBindDeviceController
         }
 
         //校验用户是否该设备的管理员
-        DeviceDTO deviceDb = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
+        GetDeviceInfoResponse deviceDb = deviceService.queryDeviceByDeviceNum(request.getDeviceNum());
         if(deviceDb == null || deviceDb.getOwnerPhone() == null || !deviceDb.getOwnerPhone().equals(request.getUserPhone()))
         {
             result.setRetCode(ErrorCode.BIND_DEVICE_ERROR);
@@ -127,16 +117,29 @@ public class UserBindDeviceController
             return response;
         }
 
+        //如果管理员绑定自己
+        if(request.getUserPhone().equals(request.getNeedBindPhone()))
+        {
+            return response;
+        }
+
+        //查询该用户是否已经绑定
+
+        userAssociateDeviceService.queryByNumAndPhone();
+        //更新device表
+        deviceDb.setUserCount(deviceDb.getUserCount() + 1);
+        deviceService.updateDevice(deviceDb);
+
         //更新用户设备关联表
-        UserAssociateDeviceDTO userAssociateDeviceDTO = new UserAssociateDeviceDTO();
+        AddDevice4UserRequest addDevice4UserRequest = new AddDevice4UserRequest();
 
-        userAssociateDeviceDTO.setUserPhone(request.getNeedBindPhone());
-        userAssociateDeviceDTO.setDeviceNum(request.getDeviceNum());
-        userAssociateDeviceDTO.setUserType(Constant.User.USER_TYPE_COMMON);
-        userAssociateDeviceDTO.setCreateTime(TimeUtil.getCurrentTime());
-        userAssociateDeviceDTO.setUpdateTime(userAssociateDeviceDTO.getCreateTime());
+        addDevice4UserRequest.setUserPhone(request.getNeedBindPhone());
+        addDevice4UserRequest.setDeviceNum(request.getDeviceNum());
+        addDevice4UserRequest.setCreateTime(TimeUtil.getCurrentTime());
+        addDevice4UserRequest.setUpdateTime(addDevice4UserRequest.getCreateTime());
+        addDevice4UserRequest.setExpiryDate(request.getExpiryDate());
 
-        userAssociateDeviceService.bindDevice(userAssociateDeviceDTO);
+        userAssociateDeviceService.bindDevice(addDevice4UserRequest);
         return response;
     }
 }

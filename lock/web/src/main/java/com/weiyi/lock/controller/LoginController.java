@@ -13,7 +13,7 @@ import com.weiyi.lock.request.LogoutRequest;
 import com.weiyi.lock.response.LoginResponse;
 import com.weiyi.lock.response.LogoutResponse;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.dto.UserDTO;
+import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class LoginController
         response.setResult(result);
 
         //根据phone获取数据库用户信息
-        UserDTO dbUser = userService.queryUserByPhone(request.getUserPhone());
+        GetUserInfoResponse dbUser = userService.queryUserByPhone(request.getUserPhone());
 
         try
         {
@@ -79,7 +79,7 @@ public class LoginController
         }
 
         response.setToken(token);
-
+        response.setUserPhone(request.getUserPhone());
         return response;
     }
 
@@ -104,13 +104,13 @@ public class LoginController
         redisClient.hdel(request.getUserPhone() + "",Constant.User.TOKEN);
 
         //删除数据库中的token
-        UserDTO dbUser = userService.queryUserByPhone(request.getUserPhone());
+        GetUserInfoResponse dbUser = userService.queryUserByPhone(request.getUserPhone());
         dbUser.setUserToken(null);
         userService.updateUser(dbUser);
         return response;
     }
 
-    private void check(LoginRequest request,UserDTO dbUser)
+    private void check(LoginRequest request,GetUserInfoResponse dbUser)
     {
         //校验用户和密码
         String password = request.getPassword();

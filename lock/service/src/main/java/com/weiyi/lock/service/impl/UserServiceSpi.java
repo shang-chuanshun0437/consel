@@ -5,7 +5,7 @@ import com.weiyi.lock.common.utils.CopyProperties;
 import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.dao.mapper.UserMapper;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.dto.UserDTO;
+import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,16 +22,16 @@ public class UserServiceSpi implements UserService
     @Autowired
     private RedisClient redisClient;
 
-    public void addUser(UserDTO userDTO)
+    public void addUser(GetUserInfoResponse getUserInfoResponse)
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter insert() func,phoneNum:{}",userDTO.getUserPhone());
+            logger.debug("inter insert() func,phoneNum:{}", getUserInfoResponse.getUserPhone());
         }
 
         User user = new User();
 
-        CopyProperties.copy(user,userDTO);
+        CopyProperties.copy(user, getUserInfoResponse);
         userMapper.addUser(user);
 
     }
@@ -48,7 +48,7 @@ public class UserServiceSpi implements UserService
         return count;
     }
 
-    public UserDTO queryUserByPhone(Long userPhone)
+    public GetUserInfoResponse queryUserByPhone(Long userPhone)
     {
         if (logger.isDebugEnabled())
         {
@@ -57,20 +57,20 @@ public class UserServiceSpi implements UserService
 
         User user = userMapper.queryUserByPhone(userPhone);
 
-        UserDTO userDTO = new UserDTO();
-        CopyProperties.copy(userDTO,user);
+        GetUserInfoResponse getUserInfoResponse = new GetUserInfoResponse();
+        CopyProperties.copy(getUserInfoResponse,user);
 
-        return userDTO;
+        return getUserInfoResponse;
     }
 
-    public void updateUser(UserDTO userDTO)
+    public void updateUser(GetUserInfoResponse getUserInfoResponse)
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter updateUser() func,phoneNum:{}",userDTO.getUserPhone());
+            logger.debug("inter updateUser() func,phoneNum:{}", getUserInfoResponse.getUserPhone());
         }
         User user = new User();
-        CopyProperties.copy(user,userDTO);
+        CopyProperties.copy(user, getUserInfoResponse);
         userMapper.updateUser(user);
     }
 

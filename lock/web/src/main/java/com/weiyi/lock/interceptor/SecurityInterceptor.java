@@ -7,7 +7,7 @@ import com.weiyi.lock.request.BaseRequest;
 import com.weiyi.lock.response.BaseResponse;
 import com.weiyi.lock.service.api.RoleService;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.dto.UserDTO;
+import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -83,7 +83,7 @@ public class SecurityInterceptor
         //如果redis中没有token，则从数据库中读取token
         if (redisToken == null)
         {
-            UserDTO user = userService.queryUserByPhone(baseRequest.getUserPhone());
+            GetUserInfoResponse user = userService.queryUserByPhone(baseRequest.getUserPhone());
             if (user == null || user.getUserToken() == null || !user.getUserToken().equals(baseRequest.getToken()))
             {
                 return buildDeniedResponse(proceedingJoinPoint);

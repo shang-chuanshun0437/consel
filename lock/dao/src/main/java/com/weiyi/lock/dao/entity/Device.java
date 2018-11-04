@@ -12,13 +12,15 @@ public class Device
     //设备的管理员账号，具有为其他用户添加开锁的权限：首次绑定该设备的用户
     private Long ownerPhone;
 
+    //设备用户量
+    private Integer userCount;
+
     //设备版本号
     private String version;
 
     private String createTime;
 
     private String updateTime;
-
 
     public Long getDeviceNum() {
         return deviceNum;
@@ -74,5 +76,13 @@ public class Device
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getUserCount() {
+        return userCount;
+    }
+
+    public void setUserCount(Integer userCount) {
+        this.userCount = userCount;
     }
 }

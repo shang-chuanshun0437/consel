@@ -1,9 +1,11 @@
-package com.weiyi.lock.dao.domain;
+package com.weiyi.lock.dao.request;
 
 import com.weiyi.lock.dao.entity.Device;
 
-public class DeviceListDomain extends Device
+public class QueryManageDeviceReq extends Device
 {
+    private int currentPage;
+
     private String startTime;
 
     private String endTime;
@@ -22,5 +24,13 @@ public class DeviceListDomain extends Device
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
     }
 }

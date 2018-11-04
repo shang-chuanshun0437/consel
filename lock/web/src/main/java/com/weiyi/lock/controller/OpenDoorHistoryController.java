@@ -10,9 +10,7 @@ import com.weiyi.lock.request.*;
 import com.weiyi.lock.response.*;
 import com.weiyi.lock.service.api.DeviceService;
 import com.weiyi.lock.service.api.OpenDoorHistoryService;
-import com.weiyi.lock.service.dto.DeviceDTO;
-import com.weiyi.lock.service.dto.DeviceListDTO;
-import com.weiyi.lock.service.dto.OpenDoorHistoryDTO;
+import com.weiyi.lock.service.response.GetOpenDoorHistoryInfoRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,15 +66,15 @@ public class OpenDoorHistoryController
         }
 
         //组装数据
-        OpenDoorHistoryDTO openDoorHistoryDTO = new OpenDoorHistoryDTO();
+        GetOpenDoorHistoryInfoRes getOpenDoorHistoryInfoRes = new GetOpenDoorHistoryInfoRes();
 
-        openDoorHistoryDTO.setUserPhone(request.getUserPhone());
-        openDoorHistoryDTO.setDeviceNum(request.getDeviceNum());
-        openDoorHistoryDTO.setDeviceName(request.getDeviceName());
-        openDoorHistoryDTO.setUserName(request.getUserName());
-        openDoorHistoryDTO.setOpenTime(TimeUtil.getCurrentTime());
+        getOpenDoorHistoryInfoRes.setUserPhone(request.getUserPhone());
+        getOpenDoorHistoryInfoRes.setDeviceNum(request.getDeviceNum());
+        getOpenDoorHistoryInfoRes.setDeviceName(request.getDeviceName());
+        getOpenDoorHistoryInfoRes.setUserName(request.getUserName());
+        getOpenDoorHistoryInfoRes.setOpenTime(TimeUtil.getCurrentTime());
 
-        openDoorHistoryService.addHistory(openDoorHistoryDTO);
+        openDoorHistoryService.addHistory(getOpenDoorHistoryInfoRes);
 
         return response;
     }
@@ -108,11 +106,11 @@ public class OpenDoorHistoryController
         openDoorListDTO.setEndTime(request.getEndTime());
         openDoorListDTO.setVersion(request.getVersion());
 
-        List<OpenDoorHistoryDTO> openDoorHistoryDTOS = openDoorHistoryService.queryOpenHistory(openDoorListDTO);
+        List<GetOpenDoorHistoryInfoRes> getOpenDoorHistoryInfoRes = openDoorHistoryService.queryOpenHistory(openDoorListDTO);
 
-        if(openDoorHistoryDTOS != null && openDoorHistoryDTOS.size() > 0)
+        if(getOpenDoorHistoryInfoRes != null && getOpenDoorHistoryInfoRes.size() > 0)
         {
-            response.setOpenDoorHistoryDTOS(openDoorHistoryDTOS.toArray(new OpenDoorHistoryDTO[openDoorHistoryDTOS.size()]));
+            response.setGetOpenDoorHistoryInfoRes(getOpenDoorHistoryInfoRes.toArray(new GetOpenDoorHistoryInfoRes[getOpenDoorHistoryInfoRes.size()]));
         }
         return response;
     }
@@ -142,11 +140,11 @@ public class OpenDoorHistoryController
         openDoorListDTO.setEndTime(request.getEndTime());
         openDoorListDTO.setVersion(request.getVersion());
 
-        List<OpenDoorHistoryDTO> openDoorHistoryDTOS = openDoorHistoryService.queryOpenHistory(openDoorListDTO);
+        List<GetOpenDoorHistoryInfoRes> getOpenDoorHistoryInfoRes = openDoorHistoryService.queryOpenHistory(openDoorListDTO);
 
-        if(openDoorHistoryDTOS != null && openDoorHistoryDTOS.size() > 0)
+        if(getOpenDoorHistoryInfoRes != null && getOpenDoorHistoryInfoRes.size() > 0)
         {
-            response.setOpenDoorHistoryDTOS(openDoorHistoryDTOS.toArray(new OpenDoorHistoryDTO[openDoorHistoryDTOS.size()]));
+            response.setGetOpenDoorHistoryInfoRes(getOpenDoorHistoryInfoRes.toArray(new GetOpenDoorHistoryInfoRes[getOpenDoorHistoryInfoRes.size()]));
         }
         return response;
     }

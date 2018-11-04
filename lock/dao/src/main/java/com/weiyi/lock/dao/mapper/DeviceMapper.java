@@ -1,6 +1,8 @@
 package com.weiyi.lock.dao.mapper;
 
-import com.weiyi.lock.dao.domain.DeviceListDomain;
+import com.weiyi.lock.dao.request.QueryManageDeviceReq;
+import com.weiyi.lock.dao.request.QueryUnManageDeviceReq;
+import com.weiyi.lock.dao.response.QueryUnManageDeviceRes;
 import com.weiyi.lock.dao.entity.Device;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +21,13 @@ public interface DeviceMapper
 
     void deleteDevice(Long deviceNum);
 
-    List<Device> queryDeviceList(DeviceListDomain deviceListDomain);
+    List<Device> queryManageDevice(QueryManageDeviceReq queryManageDeviceReq);
 
-    List<Device> userQueryDeviceList(Long userPhone);
+    int queryManageDeviceCount(QueryManageDeviceReq queryManageDeviceReq);
+
+    int queryUnManageDeviceCount(QueryUnManageDeviceReq request);
+
+    List<QueryUnManageDeviceRes> queryUnManageDevice(QueryUnManageDeviceReq request);
 
     void updateOwner(Device device);
 

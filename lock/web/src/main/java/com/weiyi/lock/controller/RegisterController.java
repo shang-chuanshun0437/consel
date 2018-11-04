@@ -10,7 +10,7 @@ import com.weiyi.lock.request.VerificationCodeRequest;
 import com.weiyi.lock.response.RegisterResponse;
 import com.weiyi.lock.response.VerificationCodeResponse;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.dto.UserDTO;
+import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -80,7 +80,7 @@ public class RegisterController
         String token = UUID.randomUUID().toString();
 
         //将用户存入数据库
-        UserDTO user = new UserDTO();
+        GetUserInfoResponse user = new GetUserInfoResponse();
         user.setUserPhone(request.getUserPhone());
         user.setUserPassword(request.getPassword());
         user.setUserToken(token);

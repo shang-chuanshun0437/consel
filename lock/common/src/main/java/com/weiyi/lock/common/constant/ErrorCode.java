@@ -35,4 +35,6 @@ public class ErrorCode
     //设备不存在
     public static final int DEVICE_NOT_EXIST = 1010;
 
+    //设备不存在
+    public static final int DEVICE_NUM_ERROR = 1011;
 }

@@ -8,7 +8,7 @@ import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.AddRoleRequest;
 import com.weiyi.lock.response.AddRoleResponse;
 import com.weiyi.lock.service.api.RoleService;
-import com.weiyi.lock.service.dto.RoleDTO;
+import com.weiyi.lock.service.response.GetRoleInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,18 +42,18 @@ public class RoleController
         }
 
         //首先判断添加的用户是已经存在,存在则报错
-        RoleDTO dbRole = roleService.queryRoleByPhone(request.getAddPhone());
+        GetRoleInfoResponse dbRole = roleService.queryRoleByPhone(request.getAddPhone());
         if(dbRole == null)
         {
-            RoleDTO roleDTO = new RoleDTO();
+            GetRoleInfoResponse getRoleInfoResponse = new GetRoleInfoResponse();
 
-            roleDTO.setUserPhone(request.getAddPhone());
-            roleDTO.setUserName(request.getAddName());
-            roleDTO.setUserRole(request.getUserRole());
-            roleDTO.setCreateTime(TimeUtil.getCurrentTime());
-            roleDTO.setUpdateTime(roleDTO.getCreateTime());
+            getRoleInfoResponse.setUserPhone(request.getAddPhone());
+            getRoleInfoResponse.setUserName(request.getAddName());
+            getRoleInfoResponse.setUserRole(request.getUserRole());
+            getRoleInfoResponse.setCreateTime(TimeUtil.getCurrentTime());
+            getRoleInfoResponse.setUpdateTime(getRoleInfoResponse.getCreateTime());
 
-            roleService.addRole(roleDTO);
+            roleService.addRole(getRoleInfoResponse);
         }
         else
         {

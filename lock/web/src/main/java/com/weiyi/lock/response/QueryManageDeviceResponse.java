@@ -2,7 +2,7 @@ package com.weiyi.lock.response;
 
 import com.weiyi.lock.service.response.GetDeviceInfoResponse;
 
-public class QueryDeviceResponse extends BaseResponse
+public class QueryManageDeviceResponse extends BaseResponse
 {
     private int count;
 

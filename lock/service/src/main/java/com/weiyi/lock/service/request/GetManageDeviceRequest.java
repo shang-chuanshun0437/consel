@@ -1,16 +1,16 @@
-package com.weiyi.lock.request;
+package com.weiyi.lock.service.request;
 
-public class QueryDeviceRequest extends BaseRequest
+public class GetManageDeviceRequest
 {
     private Long deviceNum;
 
-    private String version;
-
     private String deviceName;
 
-    private Long ownerPhone;
-
     private Integer currentPage;
+
+    private String version;
+
+    private Long ownerPhone;
 
     public Long getDeviceNum() {
         return deviceNum;
@@ -18,6 +18,14 @@ public class QueryDeviceRequest extends BaseRequest
 
     public void setDeviceNum(Long deviceNum) {
         this.deviceNum = deviceNum;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
     public Integer getCurrentPage() {
@@ -36,14 +44,6 @@ public class QueryDeviceRequest extends BaseRequest
         this.version = version;
     }
 
-    public String getDeviceName() {
-        return deviceName;
-    }
-
-    public void setDeviceName(String deviceName) {
-        this.deviceName = deviceName;
-    }
-
     public Long getOwnerPhone() {
         return ownerPhone;
     }
@@ -52,3 +52,4 @@ public class QueryDeviceRequest extends BaseRequest
         this.ownerPhone = ownerPhone;
     }
 }
+

@@ -6,6 +6,7 @@
         <result column="device_name" property="deviceName" jdbcType="VARCHAR" />
         <result column="bluetooth_mac" property="bluetoothMac" jdbcType="VARCHAR" />
         <result column="owner_phone" property="ownerPhone" jdbcType="BIGINT" />
+        <result column="user_count" property="userCount" jdbcType="BIGINT" />
         <result column="version" property="version" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="VARCHAR" />
         <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
@@ -27,11 +28,35 @@
         select * from device where device_num = #{deviceNum}
     </select>
 
-    <select id="queryDeviceList" parameterType="com.weiyi.lock.dao.domain.DeviceListDomain" resultType="com.weiyi.lock.dao.entity.Device">
+    <select id="queryManageDeviceCount" parameterType="com.weiyi.lock.dao.request.QueryManageDeviceReq" resultType="int">
+        select count(*) from device
+        <where>
+            <if test="deviceNum != null and deviceNum != ''">
+                device_num = #{deviceNum}
+            </if>
+            <if test="ownerPhone != null and ownerPhone != ''">
+                AND owner_phone = #{ownerPhone}
+            </if>
+            <if test="version != null and version != ''">
+                AND version = #{version}
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                AND device_name LIKE concat(concat('%',#{deviceName}),'%')
+            </if>
+            <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
+                AND create_time between #{startTime} and #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryManageDevice" parameterType="com.weiyi.lock.dao.request.QueryManageDeviceReq" resultType="com.weiyi.lock.dao.entity.Device">
         select * from device
         <where>
             <if test="deviceNum != null and deviceNum != ''">
                 device_num = #{deviceNum}
+            </if>
+            <if test="deviceName != null and deviceName != ''">
+                AND device_name LIKE concat(concat('%',#{deviceName}),'%')
             </if>
             <if test="ownerPhone != null and ownerPhone != ''">
                 AND owner_phone = #{ownerPhone}
@@ -43,31 +68,39 @@
                 AND create_time between #{startTime} and #{endTime}
             </if>
         </where>
+        limit #{currentPage},10
     </select>
 
-    <select id="userQueryDeviceList" parameterType="Long" resultType="com.weiyi.lock.dao.entity.Device">
-        SELECT d.device_num,d.device_name,d.bluetooth_mac,d.version,d.create_time,d.update_time ,d.owner_phone
-        FROM device d ,user_device u
-        WHERE u.user_phone = #{userPhone} AND d.device_num = u.device_num
+    <select id="queryUnManageDeviceCount" parameterType="com.weiyi.lock.dao.request.QueryUnManageDeviceReq" resultType="int">
+        select count(*)
+        from user_device
+        where user_phone = #{userPhone}
+    </select>
+
+    <select id="queryUnManageDevice" parameterType="com.weiyi.lock.dao.request.QueryUnManageDeviceReq"
+            resultType="com.weiyi.lock.dao.response.QueryUnManageDeviceRes">
+        select d.device_num,d.device_name,d.owner_phone,d.version,u.expiry_date,u.create_time
+        from user_device u,device d
+        where u.user_phone = #{userPhone} and u.device_num = d.device_num
+
+        <if test="deviceNum != null and '' != deviceNum">
+            and u.device_num = #{deviceNum}
+        </if>
+
+        <if test="deviceName != null and '' != deviceName">
+            and d.device_name LIKE concat(concat('%',#{deviceName}),'%')
+        </if>
+
+        <if test="ownerPhone != null and '' != ownerPhone">
+            and d.owner_phone = #{ownerPhone}
+        </if>
+        limit #{currentPage},10
     </select>
 
     <update id="updateDevice" parameterType="com.weiyi.lock.dao.entity.Device">
         update device
-        <set>
-            <if test="deviceName != null and deviceName != ''">
-                device_name = #{deviceName},
-            </if>
-            <if test="bluetoothMac != null and bluetoothMac != ''">
-                bluetooth_mac = #{bluetoothMac},
-            </if>
-
-            <if test="version != null and version != ''">
-                version = #{version},
-            </if>
-            <if test="updateTime != null and updateTime != ''">
-                update_time = #{updateTime}
-            </if>
-        </set>
+        set device_name = #{deviceName},bluetooth_mac = #{bluetoothMac},owner_phone = #{ownerPhone},
+        user_count = #{userCount},version = #{version},create_time = #{createTime},update_time = #{updateTime}
         where device_num = #{deviceNum}
     </update>
 

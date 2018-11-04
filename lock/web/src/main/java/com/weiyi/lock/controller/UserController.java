@@ -3,20 +3,15 @@ package com.weiyi.lock.controller;
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
-import com.weiyi.lock.common.constant.PermissionCode;
 import com.weiyi.lock.common.redis.RedisClient;
-import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.*;
 import com.weiyi.lock.response.*;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.dto.DeviceDTO;
-import com.weiyi.lock.service.dto.DeviceListDTO;
-import com.weiyi.lock.service.dto.UserDTO;
+import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
 /*
@@ -58,14 +52,14 @@ public class UserController
             logger.debug("inter updateUser() func ,the user phone:{}",request.getUserPhone());
         }
 
-        UserDTO userDTO = new UserDTO();
+        GetUserInfoResponse getUserInfoResponse = new GetUserInfoResponse();
 
-        userDTO.setUserPhone(request.getUserPhone());
-        userDTO.setUserName(request.getUserName());
-        userDTO.setUserEmail(request.getUserEmail());
-        userDTO.setUserAddress(request.getUserAddress());
+        getUserInfoResponse.setUserPhone(request.getUserPhone());
+        getUserInfoResponse.setUserName(request.getUserName());
+        getUserInfoResponse.setUserEmail(request.getUserEmail());
+        getUserInfoResponse.setUserAddress(request.getUserAddress());
 
-        userService.updateUser(userDTO);
+        userService.updateUser(getUserInfoResponse);
         return response;
     }
 
@@ -87,7 +81,7 @@ public class UserController
         }
 
         //根据手机号查询用户信息
-        UserDTO dbUser = userService.queryUserByPhone(request.getUserPhone());
+        GetUserInfoResponse dbUser = userService.queryUserByPhone(request.getUserPhone());
         if(dbUser == null || dbUser.getUserPassword() == null || !dbUser.getUserPassword().equals(request.getOldPassword()))
         {
             result.setRetCode(ErrorCode.USER_NOT_EXIST);

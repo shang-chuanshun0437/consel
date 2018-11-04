@@ -1,16 +1,16 @@
 package com.weiyi.lock.service.api;
 
-import com.weiyi.lock.service.dto.UserDTO;
+import com.weiyi.lock.service.response.GetUserInfoResponse;
 
 public interface UserService
 {
-    void addUser(UserDTO user);
+    void addUser(GetUserInfoResponse user);
 
     int countByPhone(Long userPhone);
 
-    UserDTO queryUserByPhone(Long userPhone);
+    GetUserInfoResponse queryUserByPhone(Long userPhone);
 
-    void updateUser(UserDTO user);
+    void updateUser(GetUserInfoResponse user);
 
     void updatePassword(Long userPhone,String newPassword,String token);
 }

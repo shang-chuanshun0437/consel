@@ -5,16 +5,20 @@
         <id column="id" property="id" jdbcType="BIGINT" />
         <result column="user_phone" property="userPhone" jdbcType="BIGINT" />
         <result column="device_num" property="deviceNum" jdbcType="BIGINT" />
-        <result column="user_type" property="userType" jdbcType="CHAR" />
         <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="expiry_date" property="expiryDate" jdbcType="VARCHAR" />
         <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     </resultMap>
 
     <insert id="bindDevice" parameterType="com.weiyi.lock.dao.entity.UserAssociateDevice">
        INSERT INTO
-       		user_device(user_phone,device_num,user_type,create_time,update_time)
+       		user_device(user_phone,device_num,create_time,update_time,expiry_date)
        	VALUES
-       		(#{userPhone}, #{deviceNum},#{userType},#{createTime},#{updateTime})
+       		(#{userPhone}, #{deviceNum},#{createTime},#{updateTime},#{expiryDate})
+       		ON DUPLICATE KEY UPDATE
+            create_time = #{createTime},
+            update_time = #{updateTime},
+            expiry_date = #{expiryDate}
     </insert>
 
     <select id="queryDeviceCountByNum" parameterType="Long" resultType="int">

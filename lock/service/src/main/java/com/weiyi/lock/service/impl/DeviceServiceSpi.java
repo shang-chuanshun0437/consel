@@ -1,12 +1,16 @@
 package com.weiyi.lock.service.impl;
 
 import com.weiyi.lock.common.utils.CopyProperties;
-import com.weiyi.lock.dao.domain.DeviceListDomain;
+import com.weiyi.lock.dao.request.QueryManageDeviceReq;
+import com.weiyi.lock.dao.request.QueryUnManageDeviceReq;
+import com.weiyi.lock.dao.response.QueryUnManageDeviceRes;
 import com.weiyi.lock.dao.entity.Device;
 import com.weiyi.lock.service.api.DeviceService;
 import com.weiyi.lock.dao.mapper.DeviceMapper;
-import com.weiyi.lock.service.dto.DeviceDTO;
-import com.weiyi.lock.service.dto.DeviceListDTO;
+import com.weiyi.lock.service.request.GetUnManageDeviceRequest;
+import com.weiyi.lock.service.response.GetDeviceInfoResponse;
+import com.weiyi.lock.service.request.GetManageDeviceRequest;
+import com.weiyi.lock.service.response.GetUnManageDeviceRes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +27,13 @@ public class DeviceServiceSpi implements DeviceService
     @Autowired
     private DeviceMapper deviceMapper;
 
-    public void addDevice(DeviceDTO deviceDTO)
+    public void addDevice(Device device)
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter device insert() func,request:{}",deviceDTO);
+            logger.debug("inter device insert() func,request:{}", device);
         }
 
-        Device device = new Device();
-        CopyProperties.copy(device,deviceDTO);
         deviceMapper.addDevice(device);
     }
 
@@ -44,73 +46,107 @@ public class DeviceServiceSpi implements DeviceService
         return deviceMapper.queryCountByDeviceNum(deviceNum);
     }
 
-    public DeviceDTO queryDeviceByDeviceNum(Long deviceNum)
+    public GetDeviceInfoResponse queryDeviceByDeviceNum(Long deviceNum)
     {
         if (logger.isDebugEnabled())
         {
             logger.debug("inter queryDeviceByDeviceNum() func,deviceNum:{}",deviceNum);
         }
-        DeviceDTO deviceDTO = new DeviceDTO();
+        GetDeviceInfoResponse getDeviceInfoResponse = new GetDeviceInfoResponse();
         Device device = deviceMapper.queryDeviceByDeviceNum(deviceNum);
 
-        CopyProperties.copy(deviceDTO,device);
-        return deviceDTO;
+        CopyProperties.copy(getDeviceInfoResponse,device);
+        return getDeviceInfoResponse;
     }
 
     /*
     *过滤出符合条件的设备列表
     */
-    public List<DeviceDTO> queryDeviceList(DeviceListDTO deviceListDTO)
+    public List<GetDeviceInfoResponse> queryManageDevice(GetManageDeviceRequest getManageDeviceRequest)
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter queryDeviceByDeviceNum() func,deviceNum:{}",deviceListDTO.getDeviceNum());
+            logger.debug("inter queryDeviceByDeviceNum() func,deviceNum:{}", getManageDeviceRequest.getDeviceNum());
         }
 
-        DeviceListDomain deviceListDomain = new DeviceListDomain();
+        QueryManageDeviceReq queryManageDeviceReq = new QueryManageDeviceReq();
 
-        CopyProperties.copy(deviceListDomain,deviceListDTO);
-        List<Device> devices = deviceMapper.queryDeviceList(deviceListDomain);
+        CopyProperties.copy(queryManageDeviceReq, getManageDeviceRequest);
+        List<Device> devices = deviceMapper.queryManageDevice(queryManageDeviceReq);
 
         //转换数据
-        List<DeviceDTO> deviceDTOS = new ArrayList<DeviceDTO>();
+        List<GetDeviceInfoResponse> getDeviceInfoResponses = new ArrayList<GetDeviceInfoResponse>();
         if (devices != null && devices.size() > 0)
         {
             for (Device device : devices)
             {
-                DeviceDTO deviceDTO = new DeviceDTO();
-                CopyProperties.copy(deviceDTO,device);
-                deviceDTOS.add(deviceDTO);
+                GetDeviceInfoResponse getDeviceInfoResponse = new GetDeviceInfoResponse();
+                CopyProperties.copy(getDeviceInfoResponse,device);
+                getDeviceInfoResponses.add(getDeviceInfoResponse);
             }
-            return deviceDTOS;
+            return getDeviceInfoResponses;
         }
 
         return null;
     }
 
-    public List<DeviceDTO> userQueryDeviceList(Long userPhone)
-    {
+    public int queryManageDeviceCount(GetManageDeviceRequest getManageDeviceRequest) {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter userQueryDeviceList() func,user phone:{}",userPhone);
+            logger.debug("inter queryDeviceListCount() func,deviceNum:{}", getManageDeviceRequest.getDeviceNum());
         }
 
-        Device device = new Device();
+        QueryManageDeviceReq queryManageDeviceReq = new QueryManageDeviceReq();
 
-        deviceMapper.updateDevice(device);
-        return null;
+        CopyProperties.copy(queryManageDeviceReq, getManageDeviceRequest);
+        return deviceMapper.queryManageDeviceCount(queryManageDeviceReq);
     }
 
-    public void updateDevice(DeviceDTO deviceDTO)
+    public int queryUnManageDeviceCount(GetUnManageDeviceRequest request) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryUnManageDeviceCount() func,userPhone:{}", request.getUserPhone());
+        }
+
+        QueryUnManageDeviceReq queryUnManageDeviceReq = new QueryUnManageDeviceReq();
+
+        CopyProperties.copy(queryUnManageDeviceReq, request);
+        return deviceMapper.queryUnManageDeviceCount(queryUnManageDeviceReq);
+    }
+
+    public List<GetUnManageDeviceRes> queryUnManageDevice(GetUnManageDeviceRequest request)
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter queryCountByDeviceNum() func,deviceNum:{}",deviceDTO.getDeviceNum());
+            logger.debug("inter userQueryDeviceList() func,user phone:{}",request.getUserPhone());
         }
 
-        Device device = new Device();
+        QueryUnManageDeviceReq queryUnManageDeviceReq = new QueryUnManageDeviceReq();
+        CopyProperties.copy(queryUnManageDeviceReq,request);
 
-        CopyProperties.copy(device,deviceDTO);
+        List<QueryUnManageDeviceRes> list = deviceMapper.queryUnManageDevice(queryUnManageDeviceReq);
+
+        List<com.weiyi.lock.service.response.GetUnManageDeviceRes> getUnManageDeviceResList = new ArrayList<com.weiyi.lock.service.response.GetUnManageDeviceRes>();
+
+        if (list != null && list.size() > 0)
+        {
+            for(QueryUnManageDeviceRes temp : list)
+            {
+                com.weiyi.lock.service.response.GetUnManageDeviceRes getUnManageDeviceRes = new com.weiyi.lock.service.response.GetUnManageDeviceRes();
+                CopyProperties.copy(getUnManageDeviceRes,temp);
+                getUnManageDeviceResList.add(getUnManageDeviceRes);
+            }
+
+        }
+        return getUnManageDeviceResList;
+    }
+
+    public void updateDevice(Device device)
+    {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryCountByDeviceNum() func,deviceNum:{}", device.getDeviceNum());
+        }
 
         deviceMapper.updateDevice(device);
     }

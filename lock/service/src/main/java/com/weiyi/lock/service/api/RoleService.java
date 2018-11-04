@@ -1,12 +1,12 @@
 package com.weiyi.lock.service.api;
 
-import com.weiyi.lock.service.dto.RoleDTO;
+import com.weiyi.lock.service.response.GetRoleInfoResponse;
 
 public interface RoleService
 {
-    void addRole(RoleDTO roleDTO);
+    void addRole(GetRoleInfoResponse getRoleInfoResponse);
 
-    RoleDTO queryRoleByPhone(Long userPhone);
+    GetRoleInfoResponse queryRoleByPhone(Long userPhone);
 
     String queryUserRoleByPhone(Long userPhone);
 }

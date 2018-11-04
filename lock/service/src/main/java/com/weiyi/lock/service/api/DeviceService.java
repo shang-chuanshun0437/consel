@@ -1,23 +1,30 @@
 package com.weiyi.lock.service.api;
 
-import com.weiyi.lock.service.dto.DeviceDTO;
-import com.weiyi.lock.service.dto.DeviceListDTO;
+import com.weiyi.lock.dao.entity.Device;
+import com.weiyi.lock.service.request.GetUnManageDeviceRequest;
+import com.weiyi.lock.service.response.GetDeviceInfoResponse;
+import com.weiyi.lock.service.request.GetManageDeviceRequest;
+import com.weiyi.lock.service.response.GetUnManageDeviceRes;
 
 import java.util.List;
 
 public interface DeviceService
 {
-    void addDevice(DeviceDTO deviceDTO);
+    void addDevice(Device device);
 
     int queryCountByDeviceNum(Long deviceNum);
 
-    DeviceDTO queryDeviceByDeviceNum(Long deviceNum);
+    GetDeviceInfoResponse queryDeviceByDeviceNum(Long deviceNum);
 
-    List<DeviceDTO> queryDeviceList(DeviceListDTO deviceListDTO);
+    List<GetDeviceInfoResponse> queryManageDevice(GetManageDeviceRequest getManageDeviceRequest);
 
-    List<DeviceDTO> userQueryDeviceList(Long userPhone);
+    int queryManageDeviceCount(GetManageDeviceRequest getManageDeviceRequest);
 
-    void updateDevice(DeviceDTO deviceDTO);
+    int queryUnManageDeviceCount(GetUnManageDeviceRequest request);
+
+    List<GetUnManageDeviceRes> queryUnManageDevice(GetUnManageDeviceRequest request);
+
+    void updateDevice(Device device);
 
     void deleteDevice(Long deviceNum);
 

@@ -6,13 +6,13 @@ public class UserAssociateDevice
 
     private Long userPhone;
 
-    private String userType;
-
     private Long deviceNum;
 
     private String createTime;
 
     private String updateTime;
+
+    private String expiryDate;
 
     public int getId() {
         return id;
@@ -28,14 +28,6 @@ public class UserAssociateDevice
 
     public void setUserPhone(Long userPhone) {
         this.userPhone = userPhone;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
     }
 
     public Long getDeviceNum() {
@@ -60,5 +52,13 @@ public class UserAssociateDevice
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
     }
 }
