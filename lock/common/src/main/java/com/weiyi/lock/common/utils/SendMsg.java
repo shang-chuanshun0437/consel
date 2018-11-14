@@ -25,18 +25,27 @@ public class SendMsg
 	//短信验证码的后缀，可修改
 	private static final String SUFFIX = "。此验证码15分钟内有效。提醒您：请勿将此验证码提供给其他人，以保障您的使用安全。";
 
+	//临时密码
+	private static final String TEMP_PASSWORD = "【LF.LTD】您的临时密码为{code}，请用您的身份证号及临时密码登入会员中心,登入后请立即更改您的密码。温馨提示:请勿将此临时密码提供给其他人以保障您的使用安全。";
+
 	/*入参:
 	 * @phone 手机号
-	 *@msgCode 短信验证码
-	 *
+	 *@msgCode 短信验证码 (当传入的消息类型为 1 时，此参数可传null)
+	 *@msgType 消息类型： 0 短信验证码 ； 1 临时密码
 	 * 出参：
 	 * "0" 成功；否则失败
 	 */
-	public static String send(String phone,String msgCode)
+	public static String send(String phone,String msgCode,int msgType)
 	{
-		//组装短信验证码
-		String content = PREFIX + msgCode + SUFFIX;
-
+		//组装短信内容
+		String content = "";
+		if (msgType == 0)
+		{
+			content = PREFIX + msgCode + SUFFIX;
+		}else if (msgType == 1){
+			content = TEMP_PASSWORD;
+		}
+		//String content = TEMP_PASSWORD;
 		//组装请求参数
 		StringBuffer httpArg = new StringBuffer();
 		httpArg.append("u=").append(USER_NAME).append("&");
