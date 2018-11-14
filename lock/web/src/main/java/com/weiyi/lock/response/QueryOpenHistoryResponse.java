@@ -1,12 +1,12 @@
 package com.weiyi.lock.response;
 
-import com.weiyi.lock.service.response.GetOpenDoorHistoryInfoRes;
+import com.weiyi.lock.dao.entity.OpenDoorHistory;
 
 public class QueryOpenHistoryResponse extends BaseResponse
 {
     private int count;
 
-    private GetOpenDoorHistoryInfoRes[] getOpenDoorHistoryInfoRes;
+    private OpenDoorHistory[] openDoorHistories;
 
     public int getCount() {
         return count;
@@ -16,11 +16,11 @@ public class QueryOpenHistoryResponse extends BaseResponse
         this.count = count;
     }
 
-    public GetOpenDoorHistoryInfoRes[] getGetOpenDoorHistoryInfoRes() {
-        return getOpenDoorHistoryInfoRes;
+    public OpenDoorHistory[] getOpenDoorHistories() {
+        return openDoorHistories;
     }
 
-    public void setGetOpenDoorHistoryInfoRes(GetOpenDoorHistoryInfoRes[] getOpenDoorHistoryInfoRes) {
-        this.getOpenDoorHistoryInfoRes = getOpenDoorHistoryInfoRes;
+    public void setOpenDoorHistories(OpenDoorHistory[] openDoorHistories) {
+        this.openDoorHistories = openDoorHistories;
     }
 }

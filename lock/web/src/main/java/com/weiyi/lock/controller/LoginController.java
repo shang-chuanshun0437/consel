@@ -3,17 +3,16 @@ package com.weiyi.lock.controller;
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
-import com.weiyi.lock.common.constant.PermissionCode;
+import com.weiyi.lock.common.exception.LockAssert;
+import com.weiyi.lock.common.exception.LockException;
 import com.weiyi.lock.common.redis.RedisClient;
-import com.weiyi.lock.common.utils.LockAssert;
-import com.weiyi.lock.common.utils.LockException;
+import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.LoginRequest;
 import com.weiyi.lock.request.LogoutRequest;
 import com.weiyi.lock.response.LoginResponse;
 import com.weiyi.lock.response.LogoutResponse;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class LoginController
         response.setResult(result);
 
         //根据phone获取数据库用户信息
-        GetUserInfoResponse dbUser = userService.queryUserByPhone(request.getUserPhone());
+        User dbUser = userService.queryUserByPhone(request.getUserPhone());
 
         try
         {
@@ -75,8 +74,9 @@ public class LoginController
             token = UUID.randomUUID().toString();
             dbUser.setUserToken(token);
             userService.updateUser(dbUser);
-            redisClient.hset(request.getUserPhone() + "",Constant.User.TOKEN,token);
         }
+        //将token存入redis
+        redisClient.hset(request.getUserPhone() + "",Constant.User.TOKEN,token);
 
         response.setToken(token);
         response.setUserPhone(request.getUserPhone());
@@ -88,7 +88,7 @@ public class LoginController
      */
     @RequestMapping(value = "/logout",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation(value = {PermissionCode.USER})
+    @SecurityAnnotation()
     public LogoutResponse logout(@RequestBody @Valid LogoutRequest request)
     {
         if (logger.isDebugEnabled())
@@ -104,13 +104,13 @@ public class LoginController
         redisClient.hdel(request.getUserPhone() + "",Constant.User.TOKEN);
 
         //删除数据库中的token
-        GetUserInfoResponse dbUser = userService.queryUserByPhone(request.getUserPhone());
+        User dbUser = userService.queryUserByPhone(request.getUserPhone());
         dbUser.setUserToken(null);
         userService.updateUser(dbUser);
         return response;
     }
 
-    private void check(LoginRequest request,GetUserInfoResponse dbUser)
+    private void check(LoginRequest request,User dbUser)
     {
         //校验用户和密码
         String password = request.getPassword();

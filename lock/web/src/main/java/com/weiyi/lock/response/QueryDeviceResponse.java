@@ -1,12 +1,12 @@
 package com.weiyi.lock.response;
 
-import com.weiyi.lock.service.response.GetDeviceInfoResponse;
+import com.weiyi.lock.dao.entity.DeviceOut;
 
 public class QueryDeviceResponse extends BaseResponse
 {
     private int count;
 
-    private GetDeviceInfoResponse[] getDeviceInfoResponses;
+    private DeviceOut[] deviceOuts;
 
     public int getCount() {
         return count;
@@ -16,11 +16,11 @@ public class QueryDeviceResponse extends BaseResponse
         this.count = count;
     }
 
-    public GetDeviceInfoResponse[] getGetDeviceInfoResponses() {
-        return getDeviceInfoResponses;
+    public DeviceOut[] getDeviceOuts() {
+        return deviceOuts;
     }
 
-    public void setGetDeviceInfoResponses(GetDeviceInfoResponse[] getDeviceInfoResponses) {
-        this.getDeviceInfoResponses = getDeviceInfoResponses;
+    public void setDeviceOuts(DeviceOut[] deviceOuts) {
+        this.deviceOuts = deviceOuts;
     }
 }

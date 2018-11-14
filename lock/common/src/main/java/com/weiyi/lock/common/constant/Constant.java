@@ -13,4 +13,10 @@ public class Constant
 
     //分页查询，每页的数量
     public static final int PAGE_SIZE = 10;
+
+    //启用状态
+    public static final int ENABLE = 0;
+
+    //禁用状态
+    public static final int DISABLE = 0;
 }

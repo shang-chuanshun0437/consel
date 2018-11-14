@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weiyi.lock.dao.mapper.DeviceInMapper" >
+    <resultMap id="BaseResultMap" type="com.weiyi.lock.dao.entity.DeviceIn" >
+        <id column="device_num" property="deviceNum" jdbcType="BIGINT" />
+        <result column="bluetooth_mac" property="bluetoothMac" jdbcType="VARCHAR" />
+        <result column="version" property="version" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="user_phone" property="userPhone" jdbcType="BIGINT" />
+        <result column="flag" property="flag" jdbcType="BIGINT" />
+        <result column="out_time" property="outTime" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <insert id="addDevice" parameterType="com.weiyi.lock.dao.entity.DeviceIn">
+       INSERT INTO
+       		device_in
+       		(device_num,bluetooth_mac,version,flag,user_phone,user_name,create_time,out_time)
+       	VALUES
+       		(#{deviceNum}, #{bluetoothMac},#{version}, #{flag},#{userPhone},#{userName},#{createTime},#{outTime})
+    </insert>
+
+    <select id="queryCountByDeviceNum" parameterType="Long" resultType="int">
+        select count(*) from device_in where device_num = #{deviceNum}
+    </select>
+
+    <select id="queryDeviceInListCount" parameterType="com.weiyi.lock.dao.request.QueryDeviceInListReq" resultType="int">
+        select count(*) from device_in
+        where flag = 0
+
+        <if test="deviceNum != null and deviceNum != ''">
+            and device_num = #{deviceNum}
+        </if>
+
+    </select>
+
+    <select id="queryDeviceInList" parameterType="com.weiyi.lock.dao.request.QueryDeviceInListReq" resultType="com.weiyi.lock.dao.entity.DeviceIn">
+        select * from device_in
+        where flag = 0
+        <if test="deviceNum != null and deviceNum != ''">
+            and device_num = #{deviceNum}
+        </if>
+        limit #{currentPage},10
+    </select>
+
+    <select id="queryUnManageDeviceCount" parameterType="com.weiyi.lock.dao.request.QueryUnManageDeviceOutReq" resultType="int">
+        select count(*)
+        from user_device
+        where user_phone = #{userPhone}
+    </select>
+
+    <select id="queryUnManageDevice" parameterType="com.weiyi.lock.dao.request.QueryUnManageDeviceOutReq"
+            resultType="com.weiyi.lock.dao.response.QueryUnManageDeviceOutRes">
+        select d.device_num,d.device_name,d.owner_phone,d.version,u.expiry_date,u.create_time
+        from user_device u,deviceOut d
+        where u.user_phone = #{userPhone} and u.device_num = d.device_num
+
+        <if test="deviceNum != null and '' != deviceNum">
+            and u.device_num = #{deviceNum}
+        </if>
+
+        <if test="deviceName != null and '' != deviceName">
+            and d.device_name LIKE concat(concat('%',#{deviceName}),'%')
+        </if>
+
+        <if test="ownerPhone != null and '' != ownerPhone">
+            and d.owner_phone = #{ownerPhone}
+        </if>
+        limit #{currentPage},10
+    </select>
+
+    <update id="updateDevice" parameterType="com.weiyi.lock.dao.entity.DeviceIn">
+        update device_in
+        <set>
+            <if test="bluetoothMac != null and bluetoothMac != ''">
+                bluetooth_mac = #{bluetoothMac},
+            </if>
+            <if test="version != null and version != ''">
+                version = #{version},
+            </if>
+            <if test="flag != null and flag != ''">
+                flag = #{flag},
+            </if>
+
+        </set>
+        where device_num = #{deviceNum}
+    </update>
+
+    <update id="updateOwner" parameterType="com.weiyi.lock.dao.entity.DeviceOut">
+        update deviceOut
+        set owner_phone = #{ownerPhone}
+        where device_num = #{deviceNum}
+    </update>
+
+    <delete id="deleteDevice" parameterType="Long">
+        delete from device_in where device_num = #{deviceNum}
+    </delete>
+
+</mapper>

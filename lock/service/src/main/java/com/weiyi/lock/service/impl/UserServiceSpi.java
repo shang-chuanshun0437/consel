@@ -1,15 +1,16 @@
 package com.weiyi.lock.service.impl;
 
 import com.weiyi.lock.common.redis.RedisClient;
-import com.weiyi.lock.common.utils.CopyProperties;
 import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.dao.mapper.UserMapper;
+import com.weiyi.lock.dao.request.QueryAllUserListReq;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class UserServiceSpi implements UserService
@@ -22,18 +23,13 @@ public class UserServiceSpi implements UserService
     @Autowired
     private RedisClient redisClient;
 
-    public void addUser(GetUserInfoResponse getUserInfoResponse)
+    public void addUser(User user)
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter insert() func,phoneNum:{}", getUserInfoResponse.getUserPhone());
+            logger.debug("inter insert() func,phoneNum:{}", user.getUserPhone());
         }
-
-        User user = new User();
-
-        CopyProperties.copy(user, getUserInfoResponse);
         userMapper.addUser(user);
-
     }
 
     public int countByPhone(Long userPhone)
@@ -48,7 +44,7 @@ public class UserServiceSpi implements UserService
         return count;
     }
 
-    public GetUserInfoResponse queryUserByPhone(Long userPhone)
+    public User queryUserByPhone(Long userPhone)
     {
         if (logger.isDebugEnabled())
         {
@@ -57,20 +53,15 @@ public class UserServiceSpi implements UserService
 
         User user = userMapper.queryUserByPhone(userPhone);
 
-        GetUserInfoResponse getUserInfoResponse = new GetUserInfoResponse();
-        CopyProperties.copy(getUserInfoResponse,user);
-
-        return getUserInfoResponse;
+        return user;
     }
 
-    public void updateUser(GetUserInfoResponse getUserInfoResponse)
+    public void updateUser(User user)
     {
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter updateUser() func,phoneNum:{}", getUserInfoResponse.getUserPhone());
+            logger.debug("inter updateUser() func,phoneNum:{}", user.getUserPhone());
         }
-        User user = new User();
-        CopyProperties.copy(user, getUserInfoResponse);
         userMapper.updateUser(user);
     }
 
@@ -87,5 +78,23 @@ public class UserServiceSpi implements UserService
         user.setUserPassword(newPassword);
 
         userMapper.updateUser(user);
+    }
+
+    public int queryAllUserCount(QueryAllUserListReq request) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryAllUserCount() func,phoneNum:{}",request);
+        }
+
+        return userMapper.queryAllUserCount(request);
+    }
+
+    public List<User> queryAllUser(QueryAllUserListReq request) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryAllUser() func,phoneNum:{}",request);
+        }
+
+        return userMapper.queryAllUser(request);
     }
 }

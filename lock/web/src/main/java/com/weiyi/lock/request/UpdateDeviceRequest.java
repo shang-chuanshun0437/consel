@@ -8,6 +8,8 @@ public class UpdateDeviceRequest extends BaseRequest
 
     private String version;
 
+    private Integer status;
+
     public Long getDeviceNum() {
         return deviceNum;
     }
@@ -30,5 +32,13 @@ public class UpdateDeviceRequest extends BaseRequest
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

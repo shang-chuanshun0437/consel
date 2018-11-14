@@ -5,12 +5,14 @@ import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
 import com.weiyi.lock.common.redis.RedisClient;
 import com.weiyi.lock.common.utils.TimeUtil;
+import com.weiyi.lock.dao.entity.User;
+import com.weiyi.lock.dao.entity.VerifyCode;
 import com.weiyi.lock.request.RegisterRequest;
 import com.weiyi.lock.request.VerificationCodeRequest;
 import com.weiyi.lock.response.RegisterResponse;
 import com.weiyi.lock.response.VerificationCodeResponse;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.response.GetUserInfoResponse;
+import com.weiyi.lock.service.api.VerifyCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +32,8 @@ public class RegisterController
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private VerifyCodeService verifyCodeService;
     /*
      * 获取验证码
      */
@@ -44,6 +48,15 @@ public class RegisterController
         //模拟生成验证码
         //将验证码存入redis 存活期120秒
         redisClient.set(request.getUserPhone() + Constant.User.VERIFY_CODE,123456,120);
+
+        //将短信记录存入数据库
+        VerifyCode verifyCode = new VerifyCode();
+
+        verifyCode.setUserPhone(request.getUserPhone());
+        verifyCode.setContent("123456");
+        verifyCode.setCreateTime(TimeUtil.getCurrentTime());
+
+        verifyCodeService.addCode(verifyCode);
         return response;
     }
 
@@ -80,7 +93,7 @@ public class RegisterController
         String token = UUID.randomUUID().toString();
 
         //将用户存入数据库
-        GetUserInfoResponse user = new GetUserInfoResponse();
+        User user = new User();
         user.setUserPhone(request.getUserPhone());
         user.setUserPassword(request.getPassword());
         user.setUserToken(token);

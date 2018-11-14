@@ -1,14 +1,22 @@
 package com.weiyi.lock.service.api;
 
-import com.weiyi.lock.service.request.AddDevice4UserRequest;
-import com.weiyi.lock.service.request.GetUserDeviceByNumReq;
-import com.weiyi.lock.service.response.GetUserDeviceByNumRes;
+import com.weiyi.lock.dao.entity.UserAssociateDevice;
+import com.weiyi.lock.dao.request.QueryDeviceUserReq;
+import com.weiyi.lock.dao.response.QueryDeviceUserRes;
+
+import java.util.List;
 
 public interface UserAssociateDeviceService
 {
-    void bindDevice(AddDevice4UserRequest addDevice4UserRequest);
+    void bindDevice(UserAssociateDevice userAssociateDevice);
 
     void deleteByPhoneAndNum(Long userPhone, Long deviceNum);
 
-    int queryByNumAndPhone(GetUserDeviceByNumReq request);
+    int queryByNumAndPhone(UserAssociateDevice request);
+
+    List<QueryDeviceUserRes> queryDeviceUser(QueryDeviceUserReq request);
+
+    int queryDeviceUserCount(QueryDeviceUserReq request);
+
+    void updateDeviceUser(UserAssociateDevice request);
 }

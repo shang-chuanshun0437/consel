@@ -3,11 +3,11 @@ package com.weiyi.lock.interceptor;
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.redis.RedisClient;
+import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.request.BaseRequest;
 import com.weiyi.lock.response.BaseResponse;
 import com.weiyi.lock.service.api.RoleService;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
@@ -20,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -83,7 +84,7 @@ public class SecurityInterceptor
         //如果redis中没有token，则从数据库中读取token
         if (redisToken == null)
         {
-            GetUserInfoResponse user = userService.queryUserByPhone(baseRequest.getUserPhone());
+            User user = userService.queryUserByPhone(baseRequest.getUserPhone());
             if (user == null || user.getUserToken() == null || !user.getUserToken().equals(baseRequest.getToken()))
             {
                 return buildDeniedResponse(proceedingJoinPoint);

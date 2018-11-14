@@ -4,7 +4,7 @@ public class User
 {
     private Long userPhone;
 
-    private String UserName;
+    private String userName;
 
     private String userPassword;
 
@@ -25,11 +25,11 @@ public class User
     }
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
     public void setUserName(String userName) {
-        UserName = userName;
+        this.userName = userName;
     }
 
     public String getUserPassword() {

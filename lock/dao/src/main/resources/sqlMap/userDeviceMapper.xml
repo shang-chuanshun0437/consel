@@ -36,4 +36,51 @@
         where device_num = #{deviceNum} and user_phone = #{userPhone}
     </select>
 
+    <select id="queryDeviceUser" parameterType="com.weiyi.lock.dao.request.QueryDeviceUserReq"
+            resultType="com.weiyi.lock.dao.response.QueryDeviceUserRes">
+        select u.user_phone,u.user_name,d.device_num,d.device_name,ud.expiry_date,ud.create_time
+        from user_device ud,users u,deviceOut d
+        where
+        d.owner_phone=#{ownerPhone} and d.device_num=ud.device_num and ud.user_phone=u.user_phone
+
+        <if test="deviceNum != null and deviceNum != ''">
+            and d.device_num = #{deviceNum}
+        </if>
+
+        <if test="userPhone != null and userPhone != ''">
+            AND ud.user_phone = #{userPhone}
+        </if>
+
+        <if test="deviceName != null and deviceName != ''">
+            AND d.device_name LIKE concat(concat('%',#{deviceName}),'%')
+        </if>
+
+        limit #{currentPage},10
+    </select>
+
+    <select id="queryDeviceUserCount" parameterType="com.weiyi.lock.dao.request.QueryDeviceUserReq" resultType="int">
+        select count(*)
+        from user_device ud,users u,deviceOut d
+        where
+        d.owner_phone=#{ownerPhone} and d.device_num=ud.device_num and ud.user_phone=u.user_phone
+
+        <if test="deviceNum != null and deviceNum != ''">
+            and d.device_num = #{deviceNum}
+        </if>
+
+        <if test="userPhone != null and userPhone != ''">
+            AND ud.user_phone = #{userPhone}
+        </if>
+
+        <if test="deviceName != null and deviceName != ''">
+            AND d.device_name LIKE concat(concat('%',#{deviceName}),'%')
+        </if>
+
+        limit #{currentPage},10
+    </select>
+    <update id="updateDeviceUser" parameterType="com.weiyi.lock.dao.entity.UserAssociateDevice">
+        update user_device
+        set expiry_date = #{expiryDate},update_time = #{updateTime}
+        where device_num = #{deviceNum} and user_phone = #{userPhone}
+    </update>
 </mapper>

@@ -1,12 +1,12 @@
 package com.weiyi.lock.response;
 
-import com.weiyi.lock.service.response.GetUnManageDeviceRes;
+import com.weiyi.lock.dao.response.QueryUnManageDeviceOutRes;
 
 public class QueryUnManageDeviceResponse extends BaseResponse
 {
     private int count;
 
-    private GetUnManageDeviceRes[] getUnManageDeviceRes;
+    private QueryUnManageDeviceOutRes[] queryUnManageDeviceOutRes;
 
     public int getCount() {
         return count;
@@ -16,11 +16,11 @@ public class QueryUnManageDeviceResponse extends BaseResponse
         this.count = count;
     }
 
-    public GetUnManageDeviceRes[] getGetUnManageDeviceRes() {
-        return getUnManageDeviceRes;
+    public QueryUnManageDeviceOutRes[] getQueryUnManageDeviceOutRes() {
+        return queryUnManageDeviceOutRes;
     }
 
-    public void setGetUnManageDeviceRes(GetUnManageDeviceRes[] getUnManageDeviceRes) {
-        this.getUnManageDeviceRes = getUnManageDeviceRes;
+    public void setQueryUnManageDeviceOutRes(QueryUnManageDeviceOutRes[] queryUnManageDeviceOutRes) {
+        this.queryUnManageDeviceOutRes = queryUnManageDeviceOutRes;
     }
 }

@@ -3,16 +3,16 @@ package com.weiyi.lock.controller;
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
-import com.weiyi.lock.common.constant.PermissionCode;
 import com.weiyi.lock.common.utils.TimeUtil;
+import com.weiyi.lock.dao.entity.DeviceOut;
+import com.weiyi.lock.dao.entity.UserAssociateDevice;
+import com.weiyi.lock.dao.request.QueryDeviceUserReq;
+import com.weiyi.lock.dao.response.QueryDeviceUserRes;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.*;
 import com.weiyi.lock.response.*;
-import com.weiyi.lock.service.api.DeviceService;
-import com.weiyi.lock.service.request.GetManageDeviceRequest;
-import com.weiyi.lock.service.request.GetUnManageDeviceRequest;
-import com.weiyi.lock.service.response.GetDeviceInfoResponse;
-import com.weiyi.lock.service.response.GetUnManageDeviceRes;
+import com.weiyi.lock.service.api.DeviceOutService;
+import com.weiyi.lock.service.api.UserAssociateDeviceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,10 @@ public class UserAssociateDeviceController
     private Logger logger = LoggerFactory.getLogger(UserAssociateDeviceController.class);
 
     @Autowired
-    private DeviceService deviceService;
+    private UserAssociateDeviceService userAssociateDeviceService;
+
+    @Autowired
+    private DeviceOutService deviceOutService;
 
     /*
      *根据查询条件，查询设备管理员下的所有用户列表
@@ -39,15 +42,15 @@ public class UserAssociateDeviceController
     @RequestMapping(value = "/manage/queryUserList",method = {RequestMethod.POST})
     @ResponseBody
     @SecurityAnnotation()
-    public QueryManageDeviceResponse queryUserList(@RequestBody QueryDeviceUsersRequest request)
+    public QueryDeviceUserResponse queryUserList(@RequestBody QueryDeviceUsersRequest request)
     {
-        QueryManageDeviceResponse response = new QueryManageDeviceResponse();
+        QueryDeviceUserResponse response = new QueryDeviceUserResponse();
         Result result = new Result();
         response.setResult(result);
 
         if (logger.isDebugEnabled())
         {
-            logger.debug("inter queryManageDeviceList() func ,the user is:{}", request.getUserPhone());
+            logger.debug("inter queryUserList() func ,the user is:{}", request.getUserPhone());
         }
 
         //填充查询数据
@@ -55,24 +58,61 @@ public class UserAssociateDeviceController
         {
             request.setCurrentPage(1);
         }
-        GetManageDeviceRequest getManageDeviceRequest = new GetManageDeviceRequest();
+        QueryDeviceUserReq queryDeviceUserReq = new QueryDeviceUserReq();
 
-        getManageDeviceRequest.setDeviceNum(request.getDeviceNum());
-        getManageDeviceRequest.setDeviceName(request.getDeviceName());
-        getManageDeviceRequest.setCurrentPage( (request.getCurrentPage() - 1 )*Constant.PAGE_SIZE);
-        getManageDeviceRequest.setOwnerPhone(request.getUserPhone());
-
+        queryDeviceUserReq.setDeviceNum(request.getDeviceNum());
+        queryDeviceUserReq.setDeviceName(request.getDeviceName());
+        queryDeviceUserReq.setCurrentPage( (request.getCurrentPage() - 1 )*Constant.PAGE_SIZE);
+        queryDeviceUserReq.setOwnerPhone(request.getUserPhone());
+        queryDeviceUserReq.setUserPhone(request.getNeedPhone());
         //查询总数量
-        int total = deviceService.queryManageDeviceCount(getManageDeviceRequest);
+        int total = userAssociateDeviceService.queryDeviceUserCount(queryDeviceUserReq);
         response.setCount(total);
 
-        List<GetDeviceInfoResponse> getDeviceInfoResponses = deviceService.queryManageDevice(getManageDeviceRequest);
+        List<QueryDeviceUserRes> queryDeviceUserRes = userAssociateDeviceService.queryDeviceUser(queryDeviceUserReq);
 
-        if (getDeviceInfoResponses != null && getDeviceInfoResponses.size() > 0)
+        if (queryDeviceUserRes != null && queryDeviceUserRes.size() > 0)
         {
-            response.setGetDeviceInfoResponses(getDeviceInfoResponses.toArray(new GetDeviceInfoResponse[getDeviceInfoResponses.size()]));
+            response.setQueryDeviceUserRes(queryDeviceUserRes.toArray(new QueryDeviceUserRes[queryDeviceUserRes.size()]));
         }
 
+        return response;
+    }
+
+    /*
+     *设备管理员修改设备下的用户钥匙有效期
+     */
+    @RequestMapping(value = "/modify/user",method = {RequestMethod.POST})
+    @ResponseBody
+    @SecurityAnnotation()
+    public ModifyDeviceUserResponse modifyUser(@RequestBody ModifyDeviceUserRequest request)
+    {
+        ModifyDeviceUserResponse response = new ModifyDeviceUserResponse();
+        Result result = new Result();
+        response.setResult(result);
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter modifyUser() func ,the user is:{}", request.getUserPhone());
+        }
+
+        //校验是否为该设备的管理员
+        DeviceOut deviceOut = deviceOutService.queryDeviceByDeviceNum(request.getDeviceNum());
+        if(deviceOut == null || deviceOut.getOwnerPhone() == null || !deviceOut.getOwnerPhone().equals(request.getUserPhone()))
+        {
+            result.setRetMsg("the device num is error.");
+            result.setRetCode(ErrorCode.DEVICE_NUM_ERROR);
+            return response;
+        }
+        //填充修改数据
+        UserAssociateDevice userAssociateDevice = new UserAssociateDevice();
+
+        userAssociateDevice.setDeviceNum(request.getDeviceNum());
+        userAssociateDevice.setExpiryDate(request.getExpiryDate());
+        userAssociateDevice.setUserPhone(request.getNeedModifyPhone());
+        userAssociateDevice.setUpdateTime(TimeUtil.getCurrentTime());
+
+        userAssociateDeviceService.updateDeviceUser(userAssociateDevice);
         return response;
     }
 }

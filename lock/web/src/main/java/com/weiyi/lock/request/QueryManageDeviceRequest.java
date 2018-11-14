@@ -8,6 +8,8 @@ public class QueryManageDeviceRequest extends BaseRequest
 
     private Integer currentPage;
 
+    private Integer status;
+
     public Long getDeviceNum() {
         return deviceNum;
     }
@@ -30,5 +32,13 @@ public class QueryManageDeviceRequest extends BaseRequest
 
     public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

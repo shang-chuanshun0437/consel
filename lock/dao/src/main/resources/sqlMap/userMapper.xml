@@ -26,6 +26,38 @@
         select count(*) from users where user_phone = #{userPhone}
     </select>
 
+    <select id="queryAllUserCount" parameterType="com.weiyi.lock.dao.request.QueryAllUserListReq" resultType="int">
+        select count(*)
+        from users
+        <where>
+            <if test="userPhone != null and userPhone != ''">
+                user_phone = #{userPhone}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE concat(concat('%',#{userName}),'%')
+            </if>
+            <if test="beginTime != null and '' != beginTime and endTime != null and '' != endTime">
+                AND create_time between #{beginTime} and #{endTime}
+            </if>
+        </where>
+    </select>
+    <select id="queryAllUser" parameterType="com.weiyi.lock.dao.request.QueryAllUserListReq" resultType="com.weiyi.lock.dao.entity.User">
+        select user_phone,user_name,user_email,user_address,create_time
+        from users
+        <where>
+            <if test="userPhone != null and userPhone != ''">
+                user_phone = #{userPhone}
+            </if>
+            <if test="userName != null and userName != ''">
+                AND user_name LIKE concat(concat('%',#{userName}),'%')
+            </if>
+            <if test="beginTime != null and '' != beginTime and endTime != null and '' != endTime">
+                AND create_time between #{beginTime} and #{endTime}
+            </if>
+        </where>
+        limit #{currentPage},10
+    </select>
+
     <select id="queryUserByPhone" parameterType="Long" resultType="com.weiyi.lock.dao.entity.User">
         select * from users where user_phone = #{userPhone}
     </select>
@@ -47,8 +79,9 @@
                 user_email = #{userEmail},
             </if>
             <if test="userAddress != null and userAddress != ''">
-                user_address = #{userAddress}
+                user_address = #{userAddress},
             </if>
+            user_phone=#{userPhone}
         </set>
         where user_phone=#{userPhone}
     </update>

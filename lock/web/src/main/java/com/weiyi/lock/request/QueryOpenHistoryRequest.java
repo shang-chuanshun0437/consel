@@ -3,17 +3,17 @@ package com.weiyi.lock.request;
 public class QueryOpenHistoryRequest extends BaseRequest
 {
     //该用户下的开门记录
-    private Long queryUser;
+    private Long needUser;
 
     private Long deviceNum;
 
-    private Integer pageIndex;
+    private String deviceName;
+
+    private Integer currentPage;
 
     private String startTime;
 
     private String endTime;
-
-    private String version;
 
     public Long getDeviceNum() {
         return deviceNum;
@@ -39,27 +39,27 @@ public class QueryOpenHistoryRequest extends BaseRequest
         this.endTime = endTime;
     }
 
-    public String getVersion() {
-        return version;
+    public Long getNeedUser() {
+        return needUser;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setNeedUser(Long needUser) {
+        this.needUser = needUser;
     }
 
-    public Long getQueryUser() {
-        return queryUser;
+    public String getDeviceName() {
+        return deviceName;
     }
 
-    public void setQueryUser(Long queryUser) {
-        this.queryUser = queryUser;
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
     }
 
-    public Integer getPageIndex() {
-        return pageIndex;
+    public Integer getCurrentPage() {
+        return currentPage;
     }
 
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
+    public void setCurrentPage(Integer currentPage) {
+        this.currentPage = currentPage;
     }
 }

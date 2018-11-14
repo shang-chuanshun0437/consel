@@ -2,18 +2,18 @@ package com.weiyi.lock.request;
 
 public class UpdateUserRequest extends BaseRequest
 {
-    private String UserName;
+    private String userName;
 
     private String userEmail;
 
     private String userAddress;
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
     public void setUserName(String userName) {
-        UserName = userName;
+        this.userName = userName;
     }
 
     public String getUserEmail() {

@@ -4,11 +4,11 @@ import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
 import com.weiyi.lock.common.redis.RedisClient;
+import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.*;
 import com.weiyi.lock.response.*;
 import com.weiyi.lock.service.api.UserService;
-import com.weiyi.lock.service.response.GetUserInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,31 @@ public class UserController
 
     @Autowired
     private RedisClient redisClient;
+
+    /*
+     *查询用户的基本信息
+     */
+    @RequestMapping(value = "/query/userInfo",method = {RequestMethod.POST})
+    @ResponseBody
+    @SecurityAnnotation()
+    public QueryUserInfoResponse queryUserInfo(@RequestBody QueryUserInfoRequest request)
+    {
+        QueryUserInfoResponse response = new QueryUserInfoResponse();
+        Result result = new Result();
+        response.setResult(result);
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryUserInfo() func ,the user phone:{}",request.getUserPhone());
+        }
+
+        User user = userService.queryUserByPhone(request.getUserPhone());
+
+        response.setUser(user);
+
+        return response;
+    }
+
     /*
     *更新用户的基本信息
     */
@@ -52,14 +77,14 @@ public class UserController
             logger.debug("inter updateUser() func ,the user phone:{}",request.getUserPhone());
         }
 
-        GetUserInfoResponse getUserInfoResponse = new GetUserInfoResponse();
+        User user = new User();
 
-        getUserInfoResponse.setUserPhone(request.getUserPhone());
-        getUserInfoResponse.setUserName(request.getUserName());
-        getUserInfoResponse.setUserEmail(request.getUserEmail());
-        getUserInfoResponse.setUserAddress(request.getUserAddress());
+        user.setUserPhone(request.getUserPhone());
+        user.setUserName(request.getUserName());
+        user.setUserEmail(request.getUserEmail());
+        user.setUserAddress(request.getUserAddress());
 
-        userService.updateUser(getUserInfoResponse);
+        userService.updateUser(user);
         return response;
     }
 
@@ -81,7 +106,7 @@ public class UserController
         }
 
         //根据手机号查询用户信息
-        GetUserInfoResponse dbUser = userService.queryUserByPhone(request.getUserPhone());
+        User dbUser = userService.queryUserByPhone(request.getUserPhone());
         if(dbUser == null || dbUser.getUserPassword() == null || !dbUser.getUserPassword().equals(request.getOldPassword()))
         {
             result.setRetCode(ErrorCode.USER_NOT_EXIST);
@@ -91,7 +116,7 @@ public class UserController
 
         String token = UUID.randomUUID().toString();
         //将新密码和token存入数据库
-        userService.updatePassword(request.getUserPhone(),request.getNewPassword(),request.getToken());
+        userService.updatePassword(request.getUserPhone(),request.getNewPassword(),token);
 
         //将token存入redis缓存
         redisClient.hset(request.getUserPhone() + "",Constant.User.TOKEN,token);
@@ -100,5 +125,4 @@ public class UserController
 
         return response;
     }
-
 }
