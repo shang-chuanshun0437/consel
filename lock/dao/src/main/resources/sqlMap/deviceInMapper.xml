@@ -81,7 +81,9 @@
             <if test="flag != null and flag != ''">
                 flag = #{flag},
             </if>
-
+            <if test="outTime != null and outTime != ''">
+                out_time = #{outTime},
+            </if>
         </set>
         where device_num = #{deviceNum}
     </update>

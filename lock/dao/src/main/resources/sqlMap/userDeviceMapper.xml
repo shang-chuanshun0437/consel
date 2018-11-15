@@ -39,7 +39,7 @@
     <select id="queryDeviceUser" parameterType="com.weiyi.lock.dao.request.QueryDeviceUserReq"
             resultType="com.weiyi.lock.dao.response.QueryDeviceUserRes">
         select u.user_phone,u.user_name,d.device_num,d.device_name,ud.expiry_date,ud.create_time
-        from user_device ud,users u,deviceOut d
+        from user_device ud,users u,device_out d
         where
         d.owner_phone=#{ownerPhone} and d.device_num=ud.device_num and ud.user_phone=u.user_phone
 
@@ -60,7 +60,7 @@
 
     <select id="queryDeviceUserCount" parameterType="com.weiyi.lock.dao.request.QueryDeviceUserReq" resultType="int">
         select count(*)
-        from user_device ud,users u,deviceOut d
+        from user_device ud,users u,device_out d
         where
         d.owner_phone=#{ownerPhone} and d.device_num=ud.device_num and ud.user_phone=u.user_phone
 

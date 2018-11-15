@@ -19,4 +19,10 @@ public class Constant
 
     //禁用状态
     public static final int DISABLE = 0;
+
+    //成功
+    public static final int SUCCESS = 1;
+
+    //失败
+    public static final int FAIL = 2;
 }

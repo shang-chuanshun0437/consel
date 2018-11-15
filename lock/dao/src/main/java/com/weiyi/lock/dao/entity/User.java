@@ -1,5 +1,7 @@
 package com.weiyi.lock.dao.entity;
 
+import com.weiyi.lock.common.utils.TimeUtil;
+
 public class User
 {
     private Long userPhone;
@@ -65,7 +67,7 @@ public class User
     }
 
     public String getCreateTime() {
-        return createTime;
+        return TimeUtil.getDateTime(createTime);
     }
 
     public void setCreateTime(String createTime) {

@@ -11,8 +11,8 @@ CREATE TABLE device_out
     user_count int(11)  DEFAULT 0 comment "设备用户量",
     version VARCHAR(256) DEFAULT NULL comment "设备版本号",
     status int DEFAULT 0 comment "设备状态 0 正常使用；1 禁用",
-    create_time CHAR (14) comment "设备添加时间,格式为20181015095546，表示2018-10-15 09:55:46",
-    update_time CHAR (14) comment "设备更新时间时间,格式为20181015095546，表示2018-10-15 09:55:46",
+    create_time datetime comment "设备添加时间,格式为2018-10-15 09:55:46",
+    update_time datetime DEFAULT CURRENT_TIMESTAMP comment "设备更新时间时间,格式为2018-10-15 09:55:46",
     PRIMARY KEY (device_num),
     KEY (owner_phone),
     KEY (version)

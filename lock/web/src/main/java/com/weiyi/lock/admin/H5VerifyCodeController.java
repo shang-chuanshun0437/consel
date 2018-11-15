@@ -1,20 +1,14 @@
-package com.weiyi.lock.controller;
+package com.weiyi.lock.admin;
 
 import com.weiyi.lock.common.Result;
-import com.weiyi.lock.common.constant.ErrorCode;
-import com.weiyi.lock.common.constant.PermissionCode;
+import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.utils.CopyProperties;
-import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.dao.entity.VerifyCode;
 import com.weiyi.lock.dao.request.QueryVerifyCodeListReq;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
-import com.weiyi.lock.request.AddRoleRequest;
 import com.weiyi.lock.request.QueryVerifyCodeRequest;
-import com.weiyi.lock.response.AddRoleResponse;
 import com.weiyi.lock.response.QueryVerifyCodeResponse;
-import com.weiyi.lock.service.api.RoleService;
 import com.weiyi.lock.service.api.VerifyCodeService;
-import com.weiyi.lock.service.response.GetRoleInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +22,9 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/verifyCode")
-public class VerifyCodeController
+public class H5VerifyCodeController
 {
-    private Logger logger = LoggerFactory.getLogger(VerifyCodeController.class);
+    private Logger logger = LoggerFactory.getLogger(H5VerifyCodeController.class);
 
     @Autowired
     private VerifyCodeService verifyCodeService;
@@ -58,7 +52,7 @@ public class VerifyCodeController
         QueryVerifyCodeListReq queryVerifyCodeListReq = new QueryVerifyCodeListReq();
         CopyProperties.copy(queryVerifyCodeListReq,request);
         queryVerifyCodeListReq.setUserPhone(request.getNeedPhone());
-
+        queryVerifyCodeListReq.setCurrentPage((request.getCurrentPage() - 1) * Constant.PAGE_SIZE);
         int total = verifyCodeService.queryVerifyCodeInfoCount(queryVerifyCodeListReq);
 
         response.setCount(total);

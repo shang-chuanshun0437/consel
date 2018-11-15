@@ -1,5 +1,7 @@
 package com.weiyi.lock.dao.entity;
 
+import com.weiyi.lock.common.utils.TimeUtil;
+
 public class OpenDoorHistory
 {
     private Integer id;
@@ -47,7 +49,7 @@ public class OpenDoorHistory
     }
 
     public String getOpenTime() {
-        return openTime;
+        return TimeUtil.getDateTime(openTime);
     }
 
     public void setOpenTime(String openTime) {

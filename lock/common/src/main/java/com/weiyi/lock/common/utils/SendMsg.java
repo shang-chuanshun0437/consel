@@ -26,7 +26,7 @@ public class SendMsg
 	private static final String SUFFIX = "。此验证码15分钟内有效。提醒您：请勿将此验证码提供给其他人，以保障您的使用安全。";
 
 	//临时密码
-	private static final String TEMP_PASSWORD = "【LF.LTD】您的临时密码为{code}，请用您的身份证号及临时密码登入会员中心,登入后请立即更改您的密码。温馨提示:请勿将此临时密码提供给其他人以保障您的使用安全。";
+	private static final String TEMP_PASSWORD = "【LF.LTD】您的临时密码为9999，请用您的身份证号及临时密码登入会员中心,登入后请立即更改您的密码。温馨提示:请勿将此临时密码提供给其他人以保障您的使用安全。";
 
 	/*入参:
 	 * @phone 手机号

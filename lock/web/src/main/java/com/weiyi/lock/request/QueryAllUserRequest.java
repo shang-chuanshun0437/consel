@@ -2,7 +2,7 @@ package com.weiyi.lock.request;
 
 public class QueryAllUserRequest extends BaseRequest
 {
-    private int currentPage;
+    private Integer currentPage;
 
     private String beginTime;
 
@@ -12,11 +12,11 @@ public class QueryAllUserRequest extends BaseRequest
 
     private String userName;
 
-    public int getCurrentPage() {
+    public Integer getCurrentPage() {
         return currentPage;
     }
 
-    public void setCurrentPage(int currentPage) {
+    public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
     }
 

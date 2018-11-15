@@ -7,7 +7,7 @@ CREATE TABLE users
     user_token VARCHAR(256) DEFAULT NULL comment "用户token",
     user_email VARCHAR(256) DEFAULT NULL comment "用户邮箱",
     user_address VARCHAR(256) DEFAULT NULL comment "常用地址",
-    create_time VARCHAR(24) comment "用户创 建日期,格式为20181015095546，表示2018-10-15 09:55:46",
+    create_time datetime comment "用户创 建日期,格式为2018-10-15 09:55:46",
 
     PRIMARY KEY (user_phone)
 );

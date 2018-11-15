@@ -91,15 +91,21 @@ public class DeviceInServiceSpi implements DeviceInService
     }
 
     @Transactional
-    public void deviceInOutOf(QueryDeviceInListReq request) {
+    public void deviceInOutOf(OrderSell request) {
         //查询是否存在该设备
-        List<DeviceIn> deviceIns = queryDeviceInList(request);
+        QueryDeviceInListReq queryDeviceInListReq = new QueryDeviceInListReq();
+        queryDeviceInListReq.setCurrentPage(0);
+        queryDeviceInListReq.setDeviceNum(request.getDeviceNum());
+
+        List<DeviceIn> deviceIns = queryDeviceInList(queryDeviceInListReq);
         LockAssert.isTrue(deviceIns != null && deviceIns.size() > 0,ErrorCode.DEVICE_NOT_EXIST,"the device num is error");
 
         //将入库设备表的flag置1
         DeviceIn deviceIn = new DeviceIn();
+
         deviceIn.setDeviceNum(request.getDeviceNum());
         deviceIn.setFlag(1);
+        deviceIn.setOutTime(TimeUtil.getCurrentTime());
 
         updateDevice(deviceIn);
 
@@ -112,6 +118,7 @@ public class DeviceInServiceSpi implements DeviceInService
         deviceOut.setCreateTime(TimeUtil.getCurrentTime());
         deviceOut.setUpdateTime(TimeUtil.getCurrentTime());
         deviceOut.setStatus(0);
+
         deviceOutService.addDevice(deviceOut);
 
         //插入一条记录到售出订单表

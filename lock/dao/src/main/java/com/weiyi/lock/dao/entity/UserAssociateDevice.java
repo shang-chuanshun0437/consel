@@ -1,5 +1,7 @@
 package com.weiyi.lock.dao.entity;
 
+import com.weiyi.lock.common.utils.TimeUtil;
+
 public class UserAssociateDevice
 {
     private int id;
@@ -39,7 +41,7 @@ public class UserAssociateDevice
     }
 
     public String getCreateTime() {
-        return createTime;
+        return TimeUtil.getDateTime(createTime);
     }
 
     public void setCreateTime(String createTime) {
@@ -47,7 +49,7 @@ public class UserAssociateDevice
     }
 
     public String getUpdateTime() {
-        return updateTime;
+        return TimeUtil.getDateTime(updateTime);
     }
 
     public void setUpdateTime(String updateTime) {
@@ -55,7 +57,7 @@ public class UserAssociateDevice
     }
 
     public String getExpiryDate() {
-        return expiryDate;
+        return TimeUtil.getDateTime(expiryDate);
     }
 
     public void setExpiryDate(String expiryDate) {

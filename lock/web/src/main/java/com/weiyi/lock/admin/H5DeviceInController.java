@@ -3,8 +3,10 @@ package com.weiyi.lock.admin;
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.exception.LockException;
+import com.weiyi.lock.common.utils.CopyProperties;
 import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.dao.entity.DeviceIn;
+import com.weiyi.lock.dao.entity.OrderSell;
 import com.weiyi.lock.dao.request.QueryDeviceInListReq;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.*;
@@ -15,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -166,7 +167,6 @@ public class H5DeviceInController
     @RequestMapping(value = "/deviceIn/outOfDevice",method = {RequestMethod.POST})
     @ResponseBody
     @SecurityAnnotation()
-    @Transactional
     public OutOfDeviceInResponse outOfDevice(@RequestBody OutOfDeviceInRequest request)
     {
         OutOfDeviceInResponse response = new OutOfDeviceInResponse();
@@ -178,13 +178,11 @@ public class H5DeviceInController
             logger.debug("inter outOfDevice() func ,the request:{}",request);
         }
 
-        QueryDeviceInListReq queryDeviceInListReq = new QueryDeviceInListReq();
-
-        queryDeviceInListReq.setDeviceNum(request.getDeviceNum());
-        queryDeviceInListReq.setCurrentPage(0);
+        OrderSell orderSell = new OrderSell();
+        CopyProperties.copy(orderSell,request);
 
         try{
-            deviceInService.deviceInOutOf(queryDeviceInListReq);
+            deviceInService.deviceInOutOf(orderSell);
         }catch (LockException e)
         {
             result.setRetCode(e.getCode());

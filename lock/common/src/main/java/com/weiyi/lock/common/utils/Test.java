@@ -10,7 +10,7 @@ public class Test
         String phone = "18753137390";
         String msgCode = "1234";
 
-        String result = SendMsg.send(phone,msgCode,1);
+        String result = SendMsg.send(phone,msgCode,0);
         System.out.println(result);
         if (result != null && result.equals("0"))
         {

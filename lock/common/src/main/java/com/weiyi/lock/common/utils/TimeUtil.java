@@ -9,9 +9,19 @@ public class TimeUtil
     public static String getCurrentTime()
     {
         Date now = new Date();
-        SimpleDateFormat f = new SimpleDateFormat("yyyyMMddhhmmss");
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String time = f.format(now);
 
         return time;
+    }
+
+    //去掉后面的.0
+    public static String getDateTime(String timestamp)
+    {
+        if(timestamp == null)
+        {
+            return null;
+        }
+        return timestamp.substring(0,timestamp.length() - 2);
     }
 }

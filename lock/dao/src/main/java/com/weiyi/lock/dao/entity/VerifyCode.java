@@ -1,5 +1,7 @@
 package com.weiyi.lock.dao.entity;
 
+import com.weiyi.lock.common.utils.TimeUtil;
+
 public class VerifyCode
 {
     private int id;
@@ -35,7 +37,7 @@ public class VerifyCode
     }
 
     public String getCreateTime() {
-        return createTime;
+        return TimeUtil.getDateTime(createTime);
     }
 
     public void setCreateTime(String createTime) {

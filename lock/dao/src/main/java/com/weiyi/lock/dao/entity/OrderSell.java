@@ -1,5 +1,7 @@
 package com.weiyi.lock.dao.entity;
 
+import com.weiyi.lock.common.utils.TimeUtil;
+
 //售出设备订单表
 public class OrderSell
 {
@@ -90,7 +92,7 @@ public class OrderSell
     }
 
     public String getCreateTime() {
-        return createTime;
+        return TimeUtil.getDateTime(createTime);
     }
 
     public void setCreateTime(String createTime) {
@@ -98,7 +100,7 @@ public class OrderSell
     }
 
     public String getUpdateTime() {
-        return updateTime;
+        return TimeUtil.getDateTime(updateTime);
     }
 
     public void setUpdateTime(String updateTime) {

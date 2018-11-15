@@ -1,5 +1,7 @@
 package com.weiyi.lock.dao.entity;
 
+import com.weiyi.lock.common.utils.TimeUtil;
+
 public class DeviceOut
 {
     private Long deviceNum;
@@ -66,7 +68,7 @@ public class DeviceOut
     }
 
     public String getCreateTime() {
-        return createTime;
+        return TimeUtil.getDateTime(createTime);
     }
 
     public void setCreateTime(String createTime) {
@@ -74,7 +76,7 @@ public class DeviceOut
     }
 
     public String getUpdateTime() {
-        return updateTime;
+        return TimeUtil.getDateTime(updateTime);
     }
 
     public void setUpdateTime(String updateTime) {

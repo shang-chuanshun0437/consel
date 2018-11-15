@@ -87,6 +87,9 @@
             <if test="buyerAddress != null and buyerAddress != ''">
                 buyer_address = #{buyerAddress},
             </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
             <if test="status != null">
                 status = #{status},
             </if>

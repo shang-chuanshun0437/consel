@@ -12,7 +12,7 @@
        INSERT INTO
        		verify_code (user_phone,content,create_time)
        	VALUES
-       		(#{userPhone}, #{content},#{createTime)
+       		(#{userPhone}, #{content},#{createTime})
     </insert>
 
     <select id="queryVerifyCodeInfoCount" parameterType="com.weiyi.lock.dao.request.QueryVerifyCodeListReq" resultType="int">

@@ -3,9 +3,12 @@ package com.weiyi.lock.interceptor;
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.redis.RedisClient;
+import com.weiyi.lock.common.utils.TimeUtil;
+import com.weiyi.lock.dao.entity.InterfaceAccess;
 import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.request.BaseRequest;
 import com.weiyi.lock.response.BaseResponse;
+import com.weiyi.lock.service.api.InterfaceAccessService;
 import com.weiyi.lock.service.api.RoleService;
 import com.weiyi.lock.service.api.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -44,6 +47,9 @@ public class SecurityInterceptor
     @Autowired
     private RedisClient redisClient;
 
+    @Autowired
+    private InterfaceAccessService interfaceAccessService;
+
     //定义切入点
     @Pointcut("@annotation(com.weiyi.lock.interceptor.SecurityAnnotation)")
     public void securityPoint()
@@ -55,9 +61,15 @@ public class SecurityInterceptor
     @Around("securityPoint()")
     public Object around(ProceedingJoinPoint proceedingJoinPoint) throws Throwable
     {
+        Long startTime = System.currentTimeMillis();
         // 接收到请求
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
         HttpServletRequest request = attributes.getRequest();
+
+        String ip = getIpAddress(request);
+        String url = request.getRequestURI();
+
         HttpServletResponse httpServletResponse = attributes.getResponse();
         Cookie cookie = new Cookie("abc","dd");
 
@@ -65,7 +77,11 @@ public class SecurityInterceptor
 
         // 获取拦截方法上的注解及注解值
         MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+
         SecurityAnnotation securityAnnotation = methodSignature.getMethod().getAnnotation(SecurityAnnotation.class);
+
+        String method = methodSignature.getMethod().toGenericString().split(" ")[2];
+        String interfaceName = method.split("\\(")[0];
 
         List<String> annotationValues = Arrays.asList(securityAnnotation.value());
 
@@ -74,11 +90,24 @@ public class SecurityInterceptor
         Object[] args = proceedingJoinPoint.getArgs();
         BaseRequest baseRequest = (BaseRequest)args[0];
 
+        InterfaceAccess interfaceAccess = interfaceAccessService.queryInterfaceAccess(baseRequest.getUserPhone(),interfaceName);
+
+        if (interfaceAccess == null)
+        {
+            interfaceAccess = new InterfaceAccess();
+            interfaceAccess.setUserPhone(baseRequest.getUserPhone());
+            interfaceAccess.setInterfaceName(interfaceName);
+        }
+        interfaceAccess.setStatus(Constant.SUCCESS);
+        interfaceAccess.setRemark("SUCCESS");
+        interfaceAccess.setCreateTime(TimeUtil.getCurrentTime());
+        interfaceAccess.setIp(ip);
+        interfaceAccess.setUrl(url);
         //去redis缓存中校验token
         String redisToken = (String)redisClient.hget(baseRequest.getUserPhone() + "",Constant.User.TOKEN);
         if (redisToken != null && !redisToken.equals(baseRequest.getToken()))
         {
-            return buildDeniedResponse(proceedingJoinPoint);
+            return buildDeniedResponse(proceedingJoinPoint,interfaceAccess,startTime,"token is error");
         }
 
         //如果redis中没有token，则从数据库中读取token
@@ -87,7 +116,7 @@ public class SecurityInterceptor
             User user = userService.queryUserByPhone(baseRequest.getUserPhone());
             if (user == null || user.getUserToken() == null || !user.getUserToken().equals(baseRequest.getToken()))
             {
-                return buildDeniedResponse(proceedingJoinPoint);
+                return buildDeniedResponse(proceedingJoinPoint,interfaceAccess,startTime,"token is error");
             }
             //将token存入redis
             redisClient.hset(baseRequest.getUserPhone() + "",Constant.User.TOKEN,user.getUserToken());
@@ -97,7 +126,21 @@ public class SecurityInterceptor
         if (annotationValues == null || annotationValues.size() == 0)
         {
             //调用该方法才会进入注解的方法
-            return proceedingJoinPoint.proceed();
+            Object object = proceedingJoinPoint.proceed();
+
+            interfaceAccess.setConsumeTime(System.currentTimeMillis() - startTime);
+            //数据库中没有这条记录，有 则更新，没有 则插入
+            if (interfaceAccess.getId() == null)
+            {
+                interfaceAccess.setAverageTime(interfaceAccess.getConsumeTime());
+                interfaceAccess.setInterfaceCount(1L);
+                interfaceAccessService.addRecord(interfaceAccess);
+            } else {
+                interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
+                interfaceAccess.setAverageTime((interfaceAccess.getAverageTime() + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
+                interfaceAccessService.updateRecord(interfaceAccess);
+            }
+            return object;
         }
         else
         {
@@ -106,7 +149,7 @@ public class SecurityInterceptor
 
             if (StringUtils.isEmpty(userRole))
             {
-                return buildDeniedResponse(proceedingJoinPoint);
+                return buildDeniedResponse(proceedingJoinPoint,interfaceAccess,startTime,"access denied");
             }
             String[] roles = userRole.split(";");
             //判断该用户是否具有该权限
@@ -114,18 +157,33 @@ public class SecurityInterceptor
             {
                 if (annotationValues.contains(role))
                 {
-                    return proceedingJoinPoint.proceed();
+                    //调用该方法才会进入注解的方法
+                    Object object = proceedingJoinPoint.proceed();
+
+                    interfaceAccess.setConsumeTime(System.currentTimeMillis() - startTime);
+                    //数据库中没有这条记录，有 则更新，没有 则插入
+                    if (interfaceAccess.getId() == null)
+                    {
+                        interfaceAccess.setAverageTime(interfaceAccess.getConsumeTime());
+                        interfaceAccess.setInterfaceCount(1L);
+                        interfaceAccessService.addRecord(interfaceAccess);
+                    } else {
+                        interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
+                        interfaceAccess.setAverageTime((interfaceAccess.getAverageTime() + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
+                        interfaceAccessService.updateRecord(interfaceAccess);
+                    }
+                    return object;
                 }
             }
         }
 
-        return buildDeniedResponse(proceedingJoinPoint);
+        return buildDeniedResponse(proceedingJoinPoint,interfaceAccess,startTime,"unknown error");
     }
 
     /*
     *构造请求中不满足权限的响应
     */
-    private BaseResponse buildDeniedResponse(ProceedingJoinPoint proceedingJoinPoint) throws Throwable
+    private BaseResponse buildDeniedResponse(ProceedingJoinPoint proceedingJoinPoint,InterfaceAccess interfaceAccess,Long startTime,String remark) throws Throwable
     {
         //获取返回值类型
         Signature signature = proceedingJoinPoint.getSignature();
@@ -138,6 +196,43 @@ public class SecurityInterceptor
         result.setRetMsg("access denied");
         response.setResult(result);
 
+        interfaceAccess.setStatus(Constant.FAIL);
+        interfaceAccess.setConsumeTime(System.currentTimeMillis() - startTime);
+        interfaceAccess.setRemark(remark);
+
+        //数据库中没有这条记录，有 则更新，没有 则插入
+        if (interfaceAccess.getId() == null)
+        {
+            interfaceAccess.setAverageTime(interfaceAccess.getConsumeTime());
+            interfaceAccess.setInterfaceCount(1L);
+            interfaceAccessService.addRecord(interfaceAccess);
+        } else {
+            interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
+            interfaceAccess.setAverageTime((interfaceAccess.getAverageTime() + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
+            interfaceAccessService.updateRecord(interfaceAccess);
+        }
+
         return response;
+    }
+
+    private String getIpAddress(HttpServletRequest request) {
+        String ip = request.getHeader("x-forwarded-for");
+
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_CLIENT_IP");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+        }
+        return ip;
     }
 }

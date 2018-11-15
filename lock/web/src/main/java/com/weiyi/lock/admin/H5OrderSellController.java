@@ -2,6 +2,8 @@ package com.weiyi.lock.admin;
 
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
+import com.weiyi.lock.common.utils.CopyProperties;
+import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.dao.entity.OrderSell;
 import com.weiyi.lock.dao.request.QueryOrderSellListReq;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
@@ -53,6 +55,7 @@ public class H5OrderSellController
         request.setCurrentPage((request.getCurrentPage() - 1) * Constant.PAGE_SIZE);
 
         QueryOrderSellListReq queryOrderSellListReq = new QueryOrderSellListReq();
+        CopyProperties.copy(queryOrderSellListReq,request);
 
         int total = orderSellService.queryOrderSellListCount(queryOrderSellListReq);
 
@@ -83,6 +86,9 @@ public class H5OrderSellController
             logger.debug("inter modifyOrderSell() func ,the request:{}",request);
         }
         OrderSell orderSell = new OrderSell();
+
+        CopyProperties.copy(orderSell,request);
+        orderSell.setUpdateTime(TimeUtil.getCurrentTime());
 
         orderSellService.modifyOrderSell(orderSell);
         return response;

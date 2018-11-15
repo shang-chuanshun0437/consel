@@ -1,6 +1,7 @@
 package com.weiyi.lock.admin;
 
 import com.weiyi.lock.common.Result;
+import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.utils.CopyProperties;
 import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.dao.request.QueryAllUserListReq;
@@ -49,10 +50,15 @@ public class H5UserController
         {
             logger.debug("inter queryAllUser() func ,the user is:{}", request.getUserPhone());
         }
+        if (request.getCurrentPage() == null || request.getCurrentPage() <= 0)
+        {
+            request.setCurrentPage(1);
+        }
         QueryAllUserListReq queryAllUserListReq = new QueryAllUserListReq();
 
         CopyProperties.copy(queryAllUserListReq,request);
         queryAllUserListReq.setUserPhone(request.getNeedPhone());
+        queryAllUserListReq.setCurrentPage((request.getCurrentPage() - 1) * Constant.PAGE_SIZE);
 
         int total = userService.queryAllUserCount(queryAllUserListReq);
         response.setCount(total);

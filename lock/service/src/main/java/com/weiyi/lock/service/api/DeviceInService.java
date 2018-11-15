@@ -1,6 +1,7 @@
 package com.weiyi.lock.service.api;
 
 import com.weiyi.lock.dao.entity.DeviceIn;
+import com.weiyi.lock.dao.entity.OrderSell;
 import com.weiyi.lock.dao.request.QueryDeviceInListReq;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface DeviceInService
 
     int queryDeviceInListCount(QueryDeviceInListReq request);
 
-    void deviceInOutOf(QueryDeviceInListReq request);
+    void deviceInOutOf(OrderSell request);
 }
