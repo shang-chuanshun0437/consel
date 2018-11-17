@@ -1,10 +1,10 @@
-//角色控制表
+//角色表
 CREATE TABLE role
 (
-    user_phone BIGINT NOT NULL comment "用户手机号",
-    user_name VARCHAR (16) DEFAULT NULL comment "用户名称",
-    user_role VARCHAR(256) NOT NULL comment "用户角色",
-    create_time datetime comment "用户角色创建日期,格式为2018-10-15 09:55:46",
-    update_time datetime DEFAULT CURRENT_TIMESTAMP  comment "用户角色创建日期,格式为2018-10-15 09:55:46",
-    PRIMARY KEY (user_phone)
+    id int(11) auto_increment  comment "自增ID",
+    role_name VARCHAR (16) NOT NULL comment "角色名称",
+    role_desc VARCHAR (16) DEFAULT NULL comment "角色描述",
+    status int(2) NOT NULL comment "角色状态 1：正常 ； 2：禁用",
+    create_time datetime comment "角色创建日期,格式为2018-10-15 09:55:46",
+    PRIMARY KEY (id)
 );

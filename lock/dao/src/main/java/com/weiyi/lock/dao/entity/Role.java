@@ -4,30 +4,46 @@ import com.weiyi.lock.common.utils.TimeUtil;
 
 public class Role
 {
-    private Long userPhone;
+    private Integer id;
 
-    private String UserName;
+    private String roleName;
 
-    private String userRole;
+    private String roleDesc;
+
+    private Integer status;
 
     private String createTime;
 
-    private String updateTime;
-
-    public Long getUserPhone() {
-        return userPhone;
+    public Integer getId() {
+        return id;
     }
 
-    public void setUserPhone(Long userPhone) {
-        this.userPhone = userPhone;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return UserName;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setUserName(String userName) {
-        UserName = userName;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getRoleDesc() {
+        return roleDesc;
+    }
+
+    public void setRoleDesc(String roleDesc) {
+        this.roleDesc = roleDesc;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getCreateTime() {
@@ -37,21 +53,4 @@ public class Role
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
-
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
-    }
-
-    public String getUpdateTime() {
-        return TimeUtil.getDateTime(updateTime);
-    }
-
-    public void setUpdateTime(String updateTime) {
-        this.updateTime = updateTime;
-    }
-
 }

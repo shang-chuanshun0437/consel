@@ -2,26 +2,63 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.weiyi.lock.dao.mapper.RoleMapper" >
     <resultMap id="BaseResultMap" type="com.weiyi.lock.dao.entity.Role" >
-        <id column="user_phone" property="userPhone" jdbcType="BIGINT" />
-        <result column="user_name" property="userName" jdbcType="VARCHAR" />
-        <result column="user_role" property="userRole" jdbcType="VARCHAR" />
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+        <result column="role_desc" property="roleDesc" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="BIGINT" />
         <result column="create_time" property="createTime" jdbcType="VARCHAR" />
-        <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     </resultMap>
 
     <insert id="addRole" parameterType="com.weiyi.lock.dao.entity.Role">
        INSERT INTO
-       		role (user_phone,user_name,user_role,create_time,update_time)
+       		role (role_name,role_desc,status,create_time)
        	VALUES
-       		(#{userPhone}, #{userName},#{userRole},#{createTime},#{updateTime})
+       		(#{roleName}, #{roleDesc},#{status},#{createTime})
     </insert>
 
-    <select id="queryRoleByPhone" parameterType="Long" resultType="com.weiyi.lock.dao.entity.Role">
-        select user_phone,user_name,user_role,create_time,update_time from role where user_phone = #{userPhone}
+    <select id="queryRole" parameterType="com.weiyi.lock.dao.request.GetRoleRequest" resultType="com.weiyi.lock.dao.entity.Role">
+        select *
+        from role
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND role_name LIKE concat(concat('%',#{roleName}),'%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
+        limit #{currentPage},10
     </select>
 
-    <select id="queryUserRoleByPhone" parameterType="Long" resultType="java.lang.String">
-        select user_role from role where user_phone = #{userPhone}
+    <select id="queryRoleCount" parameterType="com.weiyi.lock.dao.request.GetRoleRequest" resultType="int">
+        select count(*)
+        from role
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND role_name LIKE concat(concat('%',#{roleName}),'%')
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+        </where>
     </select>
+    <update id="updateRole" parameterType="com.weiyi.lock.dao.entity.Role">
+        update role
+        <set>
+            <if test="roleName != null and roleName != ''">
+                role_name = #{roleName},
+            </if>
+            <if test="roleDesc != null and roleDesc != ''">
+                role_desc = #{roleDesc},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 
+    <delete id="deleteRole" parameterType="int">
+        delete from role where id = #{id}
+    </delete>
 </mapper>

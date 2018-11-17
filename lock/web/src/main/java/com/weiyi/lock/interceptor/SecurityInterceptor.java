@@ -9,7 +9,7 @@ import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.request.BaseRequest;
 import com.weiyi.lock.response.BaseResponse;
 import com.weiyi.lock.service.api.InterfaceAccessService;
-import com.weiyi.lock.service.api.RoleService;
+import com.weiyi.lock.service.api.RoleUserService;
 import com.weiyi.lock.service.api.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
@@ -23,7 +23,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.jws.soap.SOAPBinding;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,7 +41,7 @@ public class SecurityInterceptor
     private UserService userService;
 
     @Autowired
-    private RoleService roleService;
+    private RoleUserService roleUserService;
 
     @Autowired
     private RedisClient redisClient;
@@ -145,7 +144,7 @@ public class SecurityInterceptor
         else
         {
             //从role角色数据库中获取该用户的角色
-            String userRole = roleService.queryUserRoleByPhone(baseRequest.getUserPhone());
+            String userRole = roleUserService.queryUserRoleByPhone(baseRequest.getUserPhone());
 
             if (StringUtils.isEmpty(userRole))
             {

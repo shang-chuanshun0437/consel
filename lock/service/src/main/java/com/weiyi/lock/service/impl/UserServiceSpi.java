@@ -1,6 +1,5 @@
 package com.weiyi.lock.service.impl;
 
-import com.weiyi.lock.common.redis.RedisClient;
 import com.weiyi.lock.dao.entity.User;
 import com.weiyi.lock.dao.mapper.UserMapper;
 import com.weiyi.lock.dao.request.QueryAllUserListReq;
@@ -19,9 +18,6 @@ public class UserServiceSpi implements UserService
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private RedisClient redisClient;
 
     public void addUser(User user)
     {

@@ -1,14 +1,15 @@
 package com.weiyi.lock.service.impl;
 
-import com.weiyi.lock.common.utils.CopyProperties;
 import com.weiyi.lock.dao.entity.Role;
 import com.weiyi.lock.dao.mapper.RoleMapper;
+import com.weiyi.lock.dao.request.GetRoleRequest;
 import com.weiyi.lock.service.api.RoleService;
-import com.weiyi.lock.service.response.GetRoleInfoResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RoleServiceSpi implements RoleService
@@ -18,39 +19,43 @@ public class RoleServiceSpi implements RoleService
     @Autowired
     private RoleMapper roleMapper;
 
-    public void addRole(GetRoleInfoResponse getRoleInfoResponse)
-    {
-        if (logger.isDebugEnabled())
+    public void addRole(Role role) {
+        if(logger.isDebugEnabled())
         {
-            logger.debug("inter role addRole() func,user phone:{}", getRoleInfoResponse.getUserPhone());
+            logger.debug("inter addRole() func");
         }
-        Role role = new Role();
-
-        CopyProperties.copy(role, getRoleInfoResponse);
-
         roleMapper.addRole(role);
     }
 
-    public GetRoleInfoResponse queryRoleByPhone(Long userPhone)
-    {
-        if (logger.isDebugEnabled())
+    public List<Role> queryRole(GetRoleRequest request) {
+        if(logger.isDebugEnabled())
         {
-            logger.debug("inter role addRole() func,user phone:{}",userPhone);
+            logger.debug("inter queryRole() func");
         }
-
-        Role role = roleMapper.queryRoleByPhone(userPhone);
-
-        GetRoleInfoResponse getRoleInfoResponse = new GetRoleInfoResponse();
-        CopyProperties.copy(getRoleInfoResponse,role);
-
-        return getRoleInfoResponse;
+        return roleMapper.queryRole(request);
     }
 
-    public String queryUserRoleByPhone(Long userPhone) {
-        if (logger.isDebugEnabled())
+    public int queryRoleCount(GetRoleRequest request) {
+        if(logger.isDebugEnabled())
         {
-            logger.debug("inter role queryUserRoleByPhone() func,user phone:{}",userPhone);
+            logger.debug("inter queryRole() func");
         }
-        return roleMapper.queryUserRoleByPhone(userPhone);
+        return roleMapper.queryRoleCount(request);
+    }
+
+    public void updateRole(Role role) {
+        if(logger.isDebugEnabled())
+        {
+            logger.debug("inter queryRole() func");
+        }
+        roleMapper.updateRole(role);
+    }
+
+    public void deleteRole(int id) {
+        if(logger.isDebugEnabled())
+        {
+            logger.debug("inter deleteRole() func");
+        }
+        roleMapper.deleteRole(id);
     }
 }

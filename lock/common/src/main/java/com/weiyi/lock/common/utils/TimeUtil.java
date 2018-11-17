@@ -9,7 +9,7 @@ public class TimeUtil
     public static String getCurrentTime()
     {
         Date now = new Date();
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
         String time = f.format(now);
 
         return time;

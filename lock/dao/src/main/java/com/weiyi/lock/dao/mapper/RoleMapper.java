@@ -1,6 +1,7 @@
 package com.weiyi.lock.dao.mapper;
 
 import com.weiyi.lock.dao.entity.Role;
+import com.weiyi.lock.dao.request.GetRoleRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +11,11 @@ public interface RoleMapper
 {
     void addRole(Role role);
 
-    Role queryRoleByPhone(Long userPhone);
+    void updateRole(Role role);
 
-    String queryUserRoleByPhone(Long userPhone);
+    void deleteRole(int id);
+
+    List<Role> queryRole(GetRoleRequest request);
+
+    int queryRoleCount(GetRoleRequest request);
 }

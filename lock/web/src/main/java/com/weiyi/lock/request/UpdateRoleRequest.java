@@ -1,12 +1,22 @@
 package com.weiyi.lock.request;
 
-public class AddRoleRequest extends BaseRequest
+public class UpdateRoleRequest extends BaseRequest
 {
-    //角色名称
+    private Integer id;
+
+    private Integer status;
+
     private String roleName;
 
-    //角色描述
     private String roleDesc;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getRoleName() {
         return roleName;
@@ -22,5 +32,13 @@ public class AddRoleRequest extends BaseRequest
 
     public void setRoleDesc(String roleDesc) {
         this.roleDesc = roleDesc;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
