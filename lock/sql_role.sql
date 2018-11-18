@@ -6,5 +6,6 @@ CREATE TABLE role
     role_desc VARCHAR (16) DEFAULT NULL comment "角色描述",
     status int(2) NOT NULL comment "角色状态 1：正常 ； 2：禁用",
     create_time datetime comment "角色创建日期,格式为2018-10-15 09:55:46",
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE KEY (role_name)
 );

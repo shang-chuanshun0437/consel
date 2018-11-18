@@ -58,7 +58,6 @@ public class H5InterfaceAccessController
 
         CopyProperties.copy(getInterfaceAccessRequest,request);
         getInterfaceAccessRequest.setCurrentPage((request.getCurrentPage() - 1) * Constant.PAGE_SIZE);
-        getInterfaceAccessRequest.setUserPhone(request.getNeedPhone());
         
         //查询数量
         int total = interfaceAccessService.queryListCount(getInterfaceAccessRequest);

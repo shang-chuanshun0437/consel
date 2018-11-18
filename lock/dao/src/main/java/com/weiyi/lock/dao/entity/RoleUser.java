@@ -6,7 +6,7 @@ public class RoleUser
 {
     private Long userPhone;
 
-    private String UserName;
+    private String userName;
 
     private String userRole;
 
@@ -23,11 +23,11 @@ public class RoleUser
     }
 
     public String getUserName() {
-        return UserName;
+        return userName;
     }
 
     public void setUserName(String userName) {
-        UserName = userName;
+        this.userName = userName;
     }
 
     public String getCreateTime() {

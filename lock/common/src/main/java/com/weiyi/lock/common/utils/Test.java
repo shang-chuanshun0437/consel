@@ -7,7 +7,7 @@ public class Test
 {
     public static void main(String[] args)
     {
-        String phone = "18753137390";
+        String phone = "+8618753137390";
         String msgCode = "1234";
 
         String result = SendMsg.send(phone,msgCode,0);

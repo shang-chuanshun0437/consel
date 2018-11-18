@@ -29,7 +29,7 @@ public class H5RoleUserController
 
     @RequestMapping(value = "/addRole",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation(value = {PermissionCode.ADD_ROLE})
+    @SecurityAnnotation()
     public AddRoleUserResponse addRoleUser(@RequestBody AddRoleUserRequest request)
     {
         AddRoleUserResponse response = new AddRoleUserResponse();

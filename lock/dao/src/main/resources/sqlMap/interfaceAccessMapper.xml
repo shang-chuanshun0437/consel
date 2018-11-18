@@ -27,11 +27,17 @@
         select count(*)
         from interface_access
         <where>
-            <if test="userPhone != null and userPhone != ''">
-                user_phone = #{userPhone}
+            <if test="interfaceCount != null">
+                interface_count >= #{interfaceCount}
+            </if>
+            <if test="averageTime != null">
+                average_time >= #{averageTime}
             </if>
             <if test="interfaceName != null and interfaceName != ''">
                 AND interface_name LIKE concat(concat('%',#{interfaceName}),'%')
+            </if>
+            <if test="startTime != null and endTime != null and  startTime != '' and endTime != ''">
+                AND create_time between #{startTime} and #{endTime}
             </if>
             <if test="status != null">
                 AND status = #{status}
@@ -44,11 +50,17 @@
         select *
         from interface_access
         <where>
-            <if test="userPhone != null and userPhone != ''">
-                user_phone = #{userPhone}
+            <if test="interfaceCount != null">
+                interface_count >= #{interfaceCount}
+            </if>
+            <if test="averageTime != null">
+                average_time >= #{averageTime}
             </if>
             <if test="interfaceName != null and interfaceName != ''">
                 AND interface_name LIKE concat(concat('%',#{interfaceName}),'%')
+            </if>
+            <if test="startTime != null and endTime != null and  startTime != '' and endTime != ''">
+                AND create_time between #{startTime} and #{endTime}
             </if>
             <if test="status != null">
                 AND status = #{status}
