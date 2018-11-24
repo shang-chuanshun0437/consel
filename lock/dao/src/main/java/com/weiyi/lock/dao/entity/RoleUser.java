@@ -8,7 +8,7 @@ public class RoleUser
 
     private String userName;
 
-    private String userRole;
+    private String roleName;
 
     private String createTime;
 
@@ -38,14 +38,6 @@ public class RoleUser
         this.createTime = createTime;
     }
 
-    public String getUserRole() {
-        return userRole;
-    }
-
-    public void setUserRole(String userRole) {
-        this.userRole = userRole;
-    }
-
     public String getUpdateTime() {
         return TimeUtil.getDateTime(updateTime);
     }
@@ -54,4 +46,11 @@ public class RoleUser
         this.updateTime = updateTime;
     }
 
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
 }

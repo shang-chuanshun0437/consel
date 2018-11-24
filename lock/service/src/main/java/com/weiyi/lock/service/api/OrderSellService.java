@@ -14,4 +14,8 @@ public interface OrderSellService
     int queryOrderSellListCount(QueryOrderSellListReq queryOrderSellListReq);
 
     void modifyOrderSell(OrderSell orderSell);
+
+    List<OrderSell> queryReplaceOrderList(QueryOrderSellListReq queryOrderSellListReq);
+
+    int queryReplaceOrderListCount(QueryOrderSellListReq queryOrderSellListReq);
 }

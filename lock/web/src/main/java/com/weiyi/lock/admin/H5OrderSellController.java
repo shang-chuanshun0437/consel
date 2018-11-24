@@ -93,4 +93,30 @@ public class H5OrderSellController
         orderSellService.modifyOrderSell(orderSell);
         return response;
     }
+
+    /*
+     *添加订单
+     */
+    @RequestMapping(value = "/add/orderSell",method = {RequestMethod.POST})
+    @ResponseBody
+    @SecurityAnnotation()
+    public AddOrderSellResponse addOrderSell(@RequestBody AddOrderSellRequest request)
+    {
+        AddOrderSellResponse response = new AddOrderSellResponse();
+        Result result = new Result();
+        response.setResult(result);
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter addOrderSell() func ,the request:{}",request);
+        }
+        OrderSell orderSell = new OrderSell();
+
+        CopyProperties.copy(orderSell,request);
+        orderSell.setCreateTime(TimeUtil.getCurrentTime());
+        orderSell.setUpdateTime(orderSell.getCreateTime());
+
+        orderSellService.addOrder(orderSell);
+        return response;
+    }
 }

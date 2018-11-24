@@ -5,9 +5,13 @@ import com.weiyi.lock.common.utils.TimeUtil;
 //售出设备订单表
 public class OrderSell
 {
+    private Integer id;
+
     private String orderId;
 
     private Long deviceNum;
+
+    private Integer unitPrice;
 
     private Long buyerPhone;
 
@@ -18,6 +22,8 @@ public class OrderSell
     private String expressName;
 
     private String expressId;
+
+    private Integer postage;
 
     private Integer status;
 
@@ -113,5 +119,29 @@ public class OrderSell
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Integer unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Integer getPostage() {
+        return postage;
+    }
+
+    public void setPostage(Integer postage) {
+        this.postage = postage;
     }
 }

@@ -45,6 +45,14 @@ public class UserAssociateDeviceSpi implements UserAssociateDeviceService
         mapper.deleteByPhoneAndNum(userAssociateDevice);
     }
 
+    public void deleteByDeviceNum(Long deviceNum) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter deleteByDeviceNum() func,the device num:{}",deviceNum);
+        }
+        mapper.deleteByDeviceNum(deviceNum);
+    }
+
     public int queryByNumAndPhone(UserAssociateDevice request)
     {
         if (logger.isDebugEnabled())

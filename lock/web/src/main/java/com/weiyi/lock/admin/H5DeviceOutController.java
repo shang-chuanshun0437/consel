@@ -3,8 +3,10 @@ package com.weiyi.lock.admin;
 import com.weiyi.lock.common.Result;
 import com.weiyi.lock.common.constant.Constant;
 import com.weiyi.lock.common.constant.ErrorCode;
+import com.weiyi.lock.common.utils.CopyProperties;
 import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.dao.entity.DeviceOut;
+import com.weiyi.lock.dao.entity.OrderSell;
 import com.weiyi.lock.dao.request.QueryManageDeviceOutReq;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.*;
@@ -119,6 +121,32 @@ public class H5DeviceOutController
         {
             response.setDeviceOuts(deviceOuts.toArray(new DeviceOut[deviceOuts.size()]));
         }
+
+        return response;
+    }
+
+    /*
+     *退换货
+     */
+    @RequestMapping(value = "/replaceDevice",method = {RequestMethod.POST})
+    @ResponseBody
+    @SecurityAnnotation()
+    public ReplaceDeviceResponse replaceDevice(@RequestBody ReplaceDeviceRequest request)
+    {
+        ReplaceDeviceResponse response = new ReplaceDeviceResponse();
+        Result result = new Result();
+        response.setResult(result);
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter deleteDevice() func ,the device num:{}", request.getDeviceNum());
+        }
+
+        OrderSell orderSell = new OrderSell();
+
+        CopyProperties.copy(orderSell,request);
+
+        deviceOutService.replaceDevice(orderSell);
 
         return response;
     }

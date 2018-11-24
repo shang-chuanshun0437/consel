@@ -37,4 +37,7 @@ public class ErrorCode
 
     //设备不存在
     public static final int DEVICE_NUM_ERROR = 1011;
+
+    //参数错误
+    public static final int PARAMETER_ERROR = 1012;
 }

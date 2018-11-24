@@ -4,24 +4,51 @@
     <resultMap id="BaseResultMap" type="com.weiyi.lock.dao.entity.RoleUser" >
         <id column="user_phone" property="userPhone" jdbcType="BIGINT" />
         <result column="user_name" property="userName" jdbcType="VARCHAR" />
-        <result column="user_role" property="userRole" jdbcType="VARCHAR" />
+        <result column="role_name" property="roleName" jdbcType="VARCHAR" />
         <result column="create_time" property="createTime" jdbcType="VARCHAR" />
         <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
     </resultMap>
 
     <insert id="addRole" parameterType="com.weiyi.lock.dao.entity.RoleUser">
        INSERT INTO
-       		role_user (user_phone,user_name,user_role,create_time,update_time)
+       		role_user (user_phone,user_name,role_name,create_time,update_time)
        	VALUES
-       		(#{userPhone}, #{userName},#{userRole},#{createTime},#{updateTime})
+       		(#{userPhone}, #{userName},#{roleName},#{createTime},#{updateTime})
     </insert>
 
     <select id="queryRoleByPhone" parameterType="Long" resultType="com.weiyi.lock.dao.entity.RoleUser">
-        select user_phone,user_name,user_role,create_time,update_time from role_user where user_phone = #{userPhone}
+        select user_phone,user_name,role_name,create_time,update_time from role_user where user_phone = #{userPhone}
     </select>
 
     <select id="queryUserRoleByPhone" parameterType="Long" resultType="java.lang.String">
-        select user_role from role_user where user_phone = #{userPhone}
+        select role_name from role_user where user_phone = #{userPhone}
     </select>
-
+    <select id="queryRole" parameterType="com.weiyi.lock.dao.request.GetRoleUserRequest" resultType="com.weiyi.lock.dao.entity.RoleUser">
+        select *
+        from role_user
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND role_name LIKE concat(concat('%',#{roleName}),'%')
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                AND user_phone = #{userPhone}
+            </if>
+        </where>
+        limit #{currentPage},10
+    </select>
+    <select id="queryRoleCount" parameterType="com.weiyi.lock.dao.request.GetRoleUserRequest" resultType="int">
+        select count(*)
+        from role_user
+        <where>
+            <if test="roleName != null and roleName != ''">
+                AND role_name LIKE concat(concat('%',#{roleName}),'%')
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                AND user_phone = #{userPhone}
+            </if>
+        </where>
+    </select>
+    <delete id="deleteRoleUserByPhone" parameterType="Long">
+        delete from role_user where user_phone = #{userPhone}
+    </delete>
 </mapper>

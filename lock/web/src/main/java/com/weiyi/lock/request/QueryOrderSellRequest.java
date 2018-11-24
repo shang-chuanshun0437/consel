@@ -2,6 +2,8 @@ package com.weiyi.lock.request;
 
 public class QueryOrderSellRequest extends BaseRequest
 {
+    private Integer id;
+
     private Long deviceNum;
 
     private String orderId;
@@ -90,5 +92,13 @@ public class QueryOrderSellRequest extends BaseRequest
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

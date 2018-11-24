@@ -6,6 +6,8 @@ public class OutOfDeviceInRequest extends BaseRequest
 
     private Long deviceNum;
 
+    private Integer unitPrice;
+
     private Long buyerPhone;
 
     private String buyerName;
@@ -15,6 +17,10 @@ public class OutOfDeviceInRequest extends BaseRequest
     private String expressName;
 
     private String expressId;
+
+    private Integer postage;
+
+    private Integer status;
 
     private String remark;
 
@@ -80,5 +86,29 @@ public class OutOfDeviceInRequest extends BaseRequest
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(Integer unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Integer getPostage() {
+        return postage;
+    }
+
+    public void setPostage(Integer postage) {
+        this.postage = postage;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

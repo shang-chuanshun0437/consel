@@ -1,6 +1,7 @@
 package com.weiyi.lock.service.api;
 
 import com.weiyi.lock.dao.entity.DeviceOut;
+import com.weiyi.lock.dao.entity.OrderSell;
 import com.weiyi.lock.dao.request.QueryManageDeviceOutReq;
 import com.weiyi.lock.dao.request.QueryUnManageDeviceOutReq;
 import com.weiyi.lock.dao.response.QueryUnManageDeviceOutRes;
@@ -33,4 +34,6 @@ public interface DeviceOutService
     void unBindDevice(Long deviceNum,Long userPhone);
 
     void unBindDevice4User(Long deviceNum,Long unBindUser,Long ownerPhone);
+
+    void replaceDevice(OrderSell orderSell);
 }

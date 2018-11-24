@@ -11,6 +11,8 @@ public interface RoleUserMapper
 {
     void addRole(RoleUser roleUser);
 
+    void deleteRoleUserByPhone(Long userPhone);
+
     RoleUser queryRoleByPhone(Long userPhone);
 
     List<RoleUser> queryRole(GetRoleUserRequest request);

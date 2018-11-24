@@ -4,15 +4,15 @@ import com.weiyi.lock.common.constant.ErrorCode;
 import com.weiyi.lock.common.exception.LockAssert;
 import com.weiyi.lock.common.exception.LockException;
 import com.weiyi.lock.common.utils.TimeUtil;
+import com.weiyi.lock.dao.entity.DeviceIn;
+import com.weiyi.lock.dao.entity.OrderSell;
 import com.weiyi.lock.dao.entity.UserAssociateDevice;
 import com.weiyi.lock.dao.request.QueryManageDeviceOutReq;
 import com.weiyi.lock.dao.request.QueryUnManageDeviceOutReq;
 import com.weiyi.lock.dao.response.QueryUnManageDeviceOutRes;
 import com.weiyi.lock.dao.entity.DeviceOut;
-import com.weiyi.lock.service.api.DeviceOutService;
+import com.weiyi.lock.service.api.*;
 import com.weiyi.lock.dao.mapper.DeviceOutMapper;
-import com.weiyi.lock.service.api.UserAssociateDeviceService;
-import com.weiyi.lock.service.api.UserService;
 import com.weiyi.lock.service.request.BindDevice4UserReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +35,12 @@ public class DeviceOutServiceSpi implements DeviceOutService
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private OrderSellService orderSellService;
+
+    @Autowired
+    private DeviceInService deviceInService;
 
     public void addDevice(DeviceOut request)
     {
@@ -234,4 +240,36 @@ public class DeviceOutServiceSpi implements DeviceOutService
         userAssociateDeviceService.deleteByPhoneAndNum(unBindUser,deviceNum);
     }
 
+    /*
+    *退/换货
+    **/
+    @Transactional
+    public void replaceDevice(OrderSell orderSell) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter replaceDevice() func,deviceNum:{}", orderSell.getDeviceNum());
+        }
+
+        orderSell.setCreateTime(TimeUtil.getCurrentTime());
+        orderSell.setUpdateTime(orderSell.getCreateTime());
+
+        //删除device_out表中的记录
+        DeviceOut deviceOut = deviceOutMapper.queryDeviceByDeviceNum(orderSell.getDeviceNum());
+        LockAssert.isTrue(deviceOut != null && deviceOut.getDeviceNum() != null,ErrorCode.DEVICE_NOT_EXIST,"device not exist.");
+
+        deviceOutMapper.deleteDevice(deviceOut.getDeviceNum());
+
+        //设备入库：device_in表中新增记录
+        DeviceIn deviceIn = new DeviceIn();
+        deviceIn.setDeviceNum(deviceOut.getDeviceNum());
+        deviceIn.setFlag(0);
+        deviceIn.setOutTime(deviceOut.getCreateTime());
+        deviceInService.updateDevice(deviceIn);
+
+        //删除user_device表中的用户绑定关系
+        userAssociateDeviceService.deleteByDeviceNum(orderSell.getDeviceNum());
+
+        //添加订单记录
+        orderSellService.addOrder(orderSell);
+    }
 }

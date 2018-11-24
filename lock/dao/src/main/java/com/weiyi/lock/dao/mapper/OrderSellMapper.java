@@ -15,5 +15,9 @@ public interface OrderSellMapper
 
     int queryOrderSellListCount(QueryOrderSellListReq queryDeviceInListReq);
 
+    List<OrderSell> queryReplaceOrderList(QueryOrderSellListReq queryDeviceInListReq);
+
+    int queryReplaceOrderListCount(QueryOrderSellListReq queryDeviceInListReq);
+
     void modifyOrderSell(OrderSell orderSell);
 }

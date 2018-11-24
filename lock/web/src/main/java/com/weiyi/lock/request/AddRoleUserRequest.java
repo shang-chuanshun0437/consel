@@ -8,8 +8,8 @@ public class AddRoleUserRequest extends BaseRequest
     //待添加的用户账号名字
     private String addName;
 
-    //要添加的权限，如果是多个权限，有“；”分开
-    private String userRole;
+    //要添加的权限
+    private String userRole[];
 
     public Long getAddPhone() {
         return addPhone;
@@ -27,11 +27,11 @@ public class AddRoleUserRequest extends BaseRequest
         this.addName = addName;
     }
 
-    public String getUserRole() {
+    public String[] getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(String userRole) {
+    public void setUserRole(String[] userRole) {
         this.userRole = userRole;
     }
 }

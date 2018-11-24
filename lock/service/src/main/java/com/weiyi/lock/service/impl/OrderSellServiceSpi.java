@@ -57,4 +57,20 @@ public class OrderSellServiceSpi implements OrderSellService
         orderSellMapper.modifyOrderSell(orderSell);
     }
 
+    public List<OrderSell> queryReplaceOrderList(QueryOrderSellListReq queryOrderSellListReq) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryReplaceOrderListCount insert() func,request:{}", queryOrderSellListReq);
+        }
+        return orderSellMapper.queryReplaceOrderList(queryOrderSellListReq);
+    }
+
+    public int queryReplaceOrderListCount(QueryOrderSellListReq queryOrderSellListReq) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryReplaceOrderListCount insert() func,request:{}", queryOrderSellListReq);
+        }
+        return orderSellMapper.queryReplaceOrderListCount(queryOrderSellListReq);
+    }
+
 }

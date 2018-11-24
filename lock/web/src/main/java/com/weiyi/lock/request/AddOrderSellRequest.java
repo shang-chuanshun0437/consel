@@ -1,14 +1,8 @@
 package com.weiyi.lock.request;
 
-public class ModifyOrderSellRequest extends BaseRequest
+public class AddOrderSellRequest extends BaseRequest
 {
-    private Integer id;
-
-    private String orderId;
-
     private Long deviceNum;
-
-    private Integer unitPrice;
 
     private Long buyerPhone;
 
@@ -20,8 +14,6 @@ public class ModifyOrderSellRequest extends BaseRequest
 
     private String expressId;
 
-    private Integer postage;
-
     private Integer status;
 
     private String remark;
@@ -32,14 +24,6 @@ public class ModifyOrderSellRequest extends BaseRequest
 
     public void setDeviceNum(Long deviceNum) {
         this.deviceNum = deviceNum;
-    }
-
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
     }
 
     public Long getBuyerPhone() {
@@ -74,22 +58,6 @@ public class ModifyOrderSellRequest extends BaseRequest
         this.status = status;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getUnitPrice() {
-        return unitPrice;
-    }
-
-    public void setUnitPrice(Integer unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
     public String getBuyerName() {
         return buyerName;
     }
@@ -104,14 +72,6 @@ public class ModifyOrderSellRequest extends BaseRequest
 
     public void setBuyerAddress(String buyerAddress) {
         this.buyerAddress = buyerAddress;
-    }
-
-    public Integer getPostage() {
-        return postage;
-    }
-
-    public void setPostage(Integer postage) {
-        this.postage = postage;
     }
 
     public String getRemark() {
