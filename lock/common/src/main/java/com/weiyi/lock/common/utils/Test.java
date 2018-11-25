@@ -7,10 +7,10 @@ public class Test
 {
     public static void main(String[] args)
     {
-        String phone = "+8618753137390";
+        String phone = "+85261386341";
         String msgCode = "1234";
 
-        String result = SendMsg.send(phone,msgCode,0);
+        String result = SendMsg.send(phone,msgCode,1);
         System.out.println(result);
         if (result != null && result.equals("0"))
         {

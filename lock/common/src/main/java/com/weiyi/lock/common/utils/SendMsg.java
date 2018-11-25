@@ -68,9 +68,11 @@ public class SendMsg
 			phoneType = 0;
 			URL = DOMESTIC_URL;
 		}else if(phone.startsWith("+852") || phone.startsWith("+853") || phone.startsWith("+886")){
+			phone=encodeUrlString(phone,"UTF-8");
 			phoneType = 1;
 			URL = INTERNATIONAL_URL;
 		}else {
+			phone=encodeUrlString(phone,"UTF-8");
 			phoneType = 2;
 			URL = INTERNATIONAL_URL;
 		}
