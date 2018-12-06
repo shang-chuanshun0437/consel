@@ -2,6 +2,7 @@ package com.weiyi.lock.service.api;
 
 import com.weiyi.lock.dao.entity.UserAssociateDevice;
 import com.weiyi.lock.dao.request.QueryDeviceUserReq;
+import com.weiyi.lock.dao.response.GetAllUserDevice;
 import com.weiyi.lock.dao.response.QueryDeviceUserRes;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface UserAssociateDeviceService
     int queryDeviceUserCount(QueryDeviceUserReq request);
 
     void updateDeviceUser(UserAssociateDevice request);
+
+    List<GetAllUserDevice> queryAllDevices(Long userPhone);
 }

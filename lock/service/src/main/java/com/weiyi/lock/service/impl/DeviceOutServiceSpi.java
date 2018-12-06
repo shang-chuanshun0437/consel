@@ -7,6 +7,7 @@ import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.dao.entity.DeviceIn;
 import com.weiyi.lock.dao.entity.OrderSell;
 import com.weiyi.lock.dao.entity.UserAssociateDevice;
+import com.weiyi.lock.dao.request.ChangeOwnerRequest;
 import com.weiyi.lock.dao.request.QueryManageDeviceOutReq;
 import com.weiyi.lock.dao.request.QueryUnManageDeviceOutReq;
 import com.weiyi.lock.dao.response.QueryUnManageDeviceOutRes;
@@ -134,7 +135,7 @@ public class DeviceOutServiceSpi implements DeviceOutService
         DeviceOut dbDevice = queryDeviceByDeviceNum(deviceNum);
 
         //判断设备是否存在，以及是否存在管理员
-        if (dbDevice.getDeviceNum() == null || dbDevice.getOwnerPhone() != null)
+        if (dbDevice == null || dbDevice.getOwnerPhone() != null)
         {
             throw new LockException(ErrorCode.BIND_DEVICE_ERROR,"please input correct device num.");
         }
@@ -271,5 +272,14 @@ public class DeviceOutServiceSpi implements DeviceOutService
 
         //添加订单记录
         orderSellService.addOrder(orderSell);
+    }
+
+    public void changeOwner(ChangeOwnerRequest request) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter changeOwner() func,deviceNum:{}", request.getOwnerPhone());
+        }
+
+        deviceOutMapper.changeOwner(request);
     }
 }

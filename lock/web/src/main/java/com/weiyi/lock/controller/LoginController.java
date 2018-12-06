@@ -80,6 +80,7 @@ public class LoginController
 
         response.setToken(token);
         response.setUserPhone(request.getUserPhone());
+        response.setUserName(dbUser.getUserName());
         return response;
     }
 

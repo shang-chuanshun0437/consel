@@ -3,6 +3,7 @@ package com.weiyi.lock.service.impl;
 import com.weiyi.lock.dao.entity.UserAssociateDevice;
 import com.weiyi.lock.dao.mapper.UserAssociateDeviceMapper;
 import com.weiyi.lock.dao.request.QueryDeviceUserReq;
+import com.weiyi.lock.dao.response.GetAllUserDevice;
 import com.weiyi.lock.dao.response.QueryDeviceUserRes;
 import com.weiyi.lock.service.api.UserAssociateDeviceService;
 import org.slf4j.Logger;
@@ -88,6 +89,14 @@ public class UserAssociateDeviceSpi implements UserAssociateDeviceService
             logger.debug("inter updateDeviceUser() func,the device num:{}",request.getDeviceNum());
         }
         mapper.updateDeviceUser(request);
+    }
+
+    public List<GetAllUserDevice> queryAllDevices(Long userPhone) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryAllDevices() func,the user phone :{}",userPhone);
+        }
+        return mapper.queryAllDevices(userPhone);
     }
 
 }

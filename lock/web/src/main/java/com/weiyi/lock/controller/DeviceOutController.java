@@ -35,43 +35,6 @@ public class DeviceOutController
     private DeviceOutService deviceOutService;
 
     /*
-    *添加设备，设备编号唯一
-    * 如果设备已存在，则添加失败
-    */
-    @RequestMapping(value = "/addDevice",method = {RequestMethod.POST})
-    @ResponseBody
-    @SecurityAnnotation(value = {PermissionCode.DEVICE})
-    public AddDeviceResponse addDevice(@RequestBody AddDeviceRequest request)
-    {
-        AddDeviceResponse response = new AddDeviceResponse();
-        Result result = new Result();
-        response.setResult(result);
-
-        if (logger.isDebugEnabled())
-        {
-            logger.debug("inter addDevice() func ,the request:{}",request);
-        }
-
-        DeviceOut deviceOut = new DeviceOut();
-        deviceOut.setDeviceName(request.getDeviceName());
-        deviceOut.setDeviceNum(request.getDeviceNum());
-        deviceOut.setBluetoothMac(request.getBluetoothMac());
-        deviceOut.setVersion(request.getVersion());
-        deviceOut.setCreateTime(TimeUtil.getCurrentTime());
-        deviceOut.setUpdateTime(deviceOut.getCreateTime());
-
-        try {
-            deviceOutService.addDevice(deviceOut);
-        }catch (LockException e)
-        {
-            result.setRetCode(e.getCode());
-            result.setRetMsg(e.getMsg());
-        }
-
-        return response;
-    }
-
-    /*
      *根据查询条件，查询用户管理的设备
      */
     @RequestMapping(value = "/manage/queryDeviceList",method = {RequestMethod.POST})
@@ -191,6 +154,41 @@ public class DeviceOutController
 
         deviceOut.setDeviceNum(request.getDeviceNum());
         deviceOut.setDeviceName(request.getDeviceName());
+        deviceOut.setUpdateTime(TimeUtil.getCurrentTime());
+
+        deviceOutService.updateDevice(deviceOut);
+        return response;
+    }
+
+    /*
+     *设备管理员，修改设备状态
+     */
+    @RequestMapping(value = "/modify/deviceStatus",method = {RequestMethod.POST})
+    @ResponseBody
+    @SecurityAnnotation()
+    public ModifyDeviceStatusResponse modifyDeviceStatus(@RequestBody ModifyDeviceStatusRequest request)
+    {
+        ModifyDeviceStatusResponse response = new ModifyDeviceStatusResponse();
+        Result result = new Result();
+        response.setResult(result);
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter modifyDeviceStatus() func ,the device num:{}", request.getDeviceNum());
+        }
+
+        //去查询设备，判断ownerPhone是否和请求中的userPhone相同
+        DeviceOut deviceDb = deviceOutService.queryDeviceByDeviceNum(request.getDeviceNum());
+        if(deviceDb.getDeviceNum() == null || deviceDb.getOwnerPhone() == null || !deviceDb.getOwnerPhone().equals(request.getUserPhone()))
+        {
+            result.setRetCode(ErrorCode.DEVICE_NUM_ERROR);
+            result.setRetMsg("the device num is error.");
+            return response;
+        }
+        DeviceOut deviceOut = new DeviceOut();
+
+        deviceOut.setDeviceNum(request.getDeviceNum());
+        deviceOut.setStatus(request.getStatus());
         deviceOut.setUpdateTime(TimeUtil.getCurrentTime());
 
         deviceOutService.updateDevice(deviceOut);

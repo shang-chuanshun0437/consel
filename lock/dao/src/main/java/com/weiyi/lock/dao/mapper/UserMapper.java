@@ -20,4 +20,6 @@ public interface UserMapper
     int queryAllUserCount(QueryAllUserListReq request);
 
     List<User> queryAllUser(QueryAllUserListReq request);
+
+    void deleteByPhoneNum(Long userPhone);
 }

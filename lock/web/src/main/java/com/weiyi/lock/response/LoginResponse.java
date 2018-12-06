@@ -6,6 +6,8 @@ public class LoginResponse extends BaseResponse
 
     private Long userPhone;
 
+    private String userName;
+
     public String getToken() {
         return token;
     }
@@ -20,5 +22,13 @@ public class LoginResponse extends BaseResponse
 
     public void setUserPhone(Long userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

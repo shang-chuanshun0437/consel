@@ -138,6 +138,12 @@
         where device_num = #{deviceNum}
     </update>
 
+    <update id="changeOwner" parameterType="com.weiyi.lock.dao.request.ChangeOwnerRequest">
+        update device_out
+        set owner_phone = #{newOwnerPhone}
+        where owner_phone = #{ownerPhone}
+    </update>
+
     <delete id="deleteDevice" parameterType="Long">
         delete from device_out where device_num = #{deviceNum}
     </delete>

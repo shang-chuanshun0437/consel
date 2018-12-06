@@ -7,7 +7,10 @@ import com.weiyi.lock.common.utils.TimeUtil;
 import com.weiyi.lock.dao.entity.DeviceOut;
 import com.weiyi.lock.dao.entity.UserAssociateDevice;
 import com.weiyi.lock.dao.request.QueryDeviceUserReq;
+import com.weiyi.lock.dao.request.QueryUnManageDeviceOutReq;
+import com.weiyi.lock.dao.response.GetAllUserDevice;
 import com.weiyi.lock.dao.response.QueryDeviceUserRes;
+import com.weiyi.lock.dao.response.QueryUnManageDeviceOutRes;
 import com.weiyi.lock.interceptor.SecurityAnnotation;
 import com.weiyi.lock.request.*;
 import com.weiyi.lock.response.*;
@@ -113,6 +116,31 @@ public class UserAssociateDeviceController
         userAssociateDevice.setUpdateTime(TimeUtil.getCurrentTime());
 
         userAssociateDeviceService.updateDeviceUser(userAssociateDevice);
+        return response;
+    }
+
+    /*
+    *查询用户下的设备：管理的设备和非管理的设备
+    */
+    @RequestMapping(value = "/queryAllDeviceList",method = {RequestMethod.POST})
+    @ResponseBody
+    @SecurityAnnotation()
+    public QueryAllDeviceResponse queryAllDevice(@RequestBody QueryUserAllDevicesRequest request)
+    {
+        QueryAllDeviceResponse response = new QueryAllDeviceResponse();
+        Result result = new Result();
+        response.setResult(result);
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter queryAllDevice() func ,the user is:{}", request.getUserPhone());
+        }
+
+        List<GetAllUserDevice> getAllUserDevices = userAssociateDeviceService.queryAllDevices(request.getUserPhone());
+        if(getAllUserDevices != null && getAllUserDevices.size() > 0){
+            response.setCount(getAllUserDevices.size());
+            response.setGetAllUserDevices(getAllUserDevices.toArray(new GetAllUserDevice[getAllUserDevices.size()]));
+        }
         return response;
     }
 }

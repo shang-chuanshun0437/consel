@@ -1,6 +1,7 @@
 package com.weiyi.lock.dao.mapper;
 
 import com.weiyi.lock.dao.entity.DeviceOut;
+import com.weiyi.lock.dao.request.ChangeOwnerRequest;
 import com.weiyi.lock.dao.request.QueryManageDeviceOutReq;
 import com.weiyi.lock.dao.request.QueryUnManageDeviceOutReq;
 import com.weiyi.lock.dao.response.QueryUnManageDeviceOutRes;
@@ -31,4 +32,5 @@ public interface DeviceOutMapper
 
     void updateOwner(DeviceOut deviceOut);
 
+    void changeOwner(ChangeOwnerRequest request);
 }

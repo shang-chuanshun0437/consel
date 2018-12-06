@@ -1,12 +1,8 @@
 package com.weiyi.lock.request;
 
-public class RegisterRequest
+public class CheckVerifyCodeRequest
 {
     private Long userPhone;
-
-    private String password;
-
-    private String userName;
 
     //验证码
     private int verificationCode;
@@ -19,27 +15,11 @@ public class RegisterRequest
         this.userPhone = userPhone;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public int getVerificationCode() {
         return verificationCode;
     }
 
     public void setVerificationCode(int verificationCode) {
         this.verificationCode = verificationCode;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 }

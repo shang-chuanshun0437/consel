@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import sun.misc.Lock;
 
 /*
 * 用户绑定设备控制器
@@ -80,7 +81,12 @@ public class UserBindDeviceController
         BindDevice4UserReq bindDevice4UserReq = new BindDevice4UserReq();
         CopyProperties.copy(bindDevice4UserReq,request);
 
-        deviceOutService.bindDevice4User(bindDevice4UserReq);
+        try {
+            deviceOutService.bindDevice4User(bindDevice4UserReq);
+        }catch (LockException e){
+            result.setRetCode(e.getCode());
+            result.setRetMsg(e.getMsg());
+        }
 
         return response;
     }

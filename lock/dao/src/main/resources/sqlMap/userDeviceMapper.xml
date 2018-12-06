@@ -29,6 +29,10 @@
         delete from user_device where device_num = #{deviceNum} and user_phone = #{userPhone}
     </delete>
 
+    <delete id="deleteByPhone" parameterType="Long">
+        delete from user_device where user_phone = #{userPhone}
+    </delete>
+
     <delete id="deleteByDeviceNum" parameterType="Long">
         delete from user_device where device_num = #{deviceNum}
     </delete>
@@ -87,4 +91,19 @@
         set expiry_date = #{expiryDate},update_time = #{updateTime}
         where device_num = #{deviceNum} and user_phone = #{userPhone}
     </update>
+    <update id="changeDeviceUser" parameterType="com.weiyi.lock.dao.request.ChangeDeviceUserRequest">
+        update user_device
+        set user_phone = #{newUserPhone},update_time = #{updateTime}
+        where user_phone = #{userPhone}
+    </update>
+
+    <select id="queryAllDevices" parameterType="Long" resultType="com.weiyi.lock.dao.response.GetAllUserDevice">
+        select u.expiry_date,d.device_num,d.bluetooth_mac,d.device_name,d.version
+        from user_device u ,device_out d
+        where u.user_phone=#{userPhone} and d.device_num=u.device_num
+        union
+        SELECT 0 as expiry_date,d.device_num,d.bluetooth_mac,d.device_name,d.version
+        from device_out d
+        where d.owner_phone=#{userPhone}
+    </select>
 </mapper>

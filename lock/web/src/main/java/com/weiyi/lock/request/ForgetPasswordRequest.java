@@ -1,12 +1,10 @@
 package com.weiyi.lock.request;
 
-public class RegisterRequest
+public class ForgetPasswordRequest
 {
     private Long userPhone;
 
     private String password;
-
-    private String userName;
 
     //验证码
     private int verificationCode;
@@ -33,13 +31,5 @@ public class RegisterRequest
 
     public void setVerificationCode(int verificationCode) {
         this.verificationCode = verificationCode;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 }

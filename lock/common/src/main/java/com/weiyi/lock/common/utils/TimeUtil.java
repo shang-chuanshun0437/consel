@@ -5,7 +5,7 @@ import java.util.Date;
 
 public class TimeUtil
 {
-    //返回年月日时分秒字符串，例如20181015095546，表示2018-10-15 09:55:46
+    //返回年月日时分秒字符串
     public static String getCurrentTime()
     {
         Date now = new Date();
@@ -23,5 +23,14 @@ public class TimeUtil
             return null;
         }
         return timestamp.substring(0,timestamp.length() - 2);
+    }
+
+    //格式化输入日期
+    public static String formatTime(String date)
+    {
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S");
+        String time = f.format(date);
+
+        return time;
     }
 }
