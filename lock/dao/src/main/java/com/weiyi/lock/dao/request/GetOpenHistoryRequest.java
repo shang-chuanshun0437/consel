@@ -6,6 +6,8 @@ public class GetOpenHistoryRequest extends OpenDoorHistory
 {
     private int currentPage;
 
+    private int pageSize;
+
     private String startTime;
 
     private String endTime;
@@ -32,5 +34,13 @@ public class GetOpenHistoryRequest extends OpenDoorHistory
 
     public void setEndTime(String endTime) {
         this.endTime = endTime;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

@@ -198,7 +198,7 @@ public class DeviceOutServiceSpi implements DeviceOutService
         DeviceOut dbDevice = queryDeviceByDeviceNum(deviceNum);
 
         //判断设备是否存在，以及是否存在管理员
-        if (dbDevice.getDeviceNum() == null || dbDevice.getOwnerPhone() == null)
+        if (dbDevice == null || dbDevice.getOwnerPhone() == null)
         {
             throw new LockException(ErrorCode.UNBIND_DEVICE_ERROR,"please input correct device num.");
         }
@@ -213,8 +213,10 @@ public class DeviceOutServiceSpi implements DeviceOutService
             dbDevice.setUserCount(0);
             dbDevice.setOwnerPhone(null);
             dbDevice.setUpdateTime(TimeUtil.getCurrentTime());
+            dbDevice.setDeviceName(null);
 
-            updateDevice(dbDevice);
+            deviceOutMapper.deleteDevice(dbDevice.getDeviceNum());
+            deviceOutMapper.addDevice(dbDevice);
             return;
         }
 

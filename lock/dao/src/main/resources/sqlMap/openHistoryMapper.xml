@@ -31,7 +31,7 @@
             </if>
         </where>
         ORDER BY open_time DESC
-        limit #{currentPage},10
+        limit #{currentPage},#{pageSize}
     </select>
 
     <select id="queryOpenHistoryCount" parameterType="com.weiyi.lock.dao.request.GetOpenHistoryRequest" resultType="int">

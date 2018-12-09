@@ -11,6 +11,8 @@ public class QueryOpenHistoryRequest extends BaseRequest
 
     private Integer currentPage;
 
+    private Integer pageSize;
+
     private String startTime;
 
     private String endTime;
@@ -61,5 +63,13 @@ public class QueryOpenHistoryRequest extends BaseRequest
 
     public void setCurrentPage(Integer currentPage) {
         this.currentPage = currentPage;
+    }
+
+    public Integer getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(Integer pageSize) {
+        this.pageSize = pageSize;
     }
 }
