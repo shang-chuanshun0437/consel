@@ -162,10 +162,6 @@ public class RegisterController
         //校验 验证码 是否正确
         Object code = redisClient.get(request.getUserPhone() + Constant.User.VERIFY_CODE);
 
-        if(logger.isDebugEnabled()){
-            logger.debug("inter checkVerifyCode() func,the verifyCode is :{}",((Integer)code).intValue());
-        }
-
         if (code == null || request.getVerificationCode() != ((Integer)code).intValue())
         {
             result.setRetCode(ErrorCode.VERIFY_ERROR);
