@@ -1,6 +1,4 @@
 
-CREATE database weiyi;
-
 //出库设备表
 CREATE TABLE device_out
 (
