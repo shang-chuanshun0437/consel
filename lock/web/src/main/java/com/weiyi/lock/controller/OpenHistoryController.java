@@ -61,7 +61,6 @@ public class OpenHistoryController
         GetOpenHistoryRequest getOpenHistoryRequest = new GetOpenHistoryRequest();
 
         CopyProperties.copy(getOpenHistoryRequest,request);
-        getOpenHistoryRequest.setUserPhone(null);
         getOpenHistoryRequest.setCurrentPage((request.getCurrentPage() - 1) * request.getPageSize());
 
         int total = openHistoryService.queryOpenHistoryListCount(getOpenHistoryRequest);

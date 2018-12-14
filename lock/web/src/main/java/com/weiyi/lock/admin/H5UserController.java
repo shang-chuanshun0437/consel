@@ -39,7 +39,7 @@ public class H5UserController
      */
     @RequestMapping(value = "/query/allUser",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryAllUserResponse queryAllUser(@RequestBody @Valid QueryAllUserRequest request)
     {
         QueryAllUserResponse response = new QueryAllUserResponse();

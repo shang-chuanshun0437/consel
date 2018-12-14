@@ -36,7 +36,7 @@ public class H5OrderSellController
     */
     @RequestMapping(value = "/query/orderSell/list",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryOrderSellResponse queryOrderSell(@RequestBody QueryOrderSellRequest request)
     {
         QueryOrderSellResponse response = new QueryOrderSellResponse();
@@ -74,7 +74,7 @@ public class H5OrderSellController
      */
     @RequestMapping(value = "/modify/orderSell",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public ModifyOrderSellResponse modifyOrderSell(@RequestBody ModifyOrderSellRequest request)
     {
         ModifyOrderSellResponse response = new ModifyOrderSellResponse();
@@ -99,7 +99,7 @@ public class H5OrderSellController
      */
     @RequestMapping(value = "/add/orderSell",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public AddOrderSellResponse addOrderSell(@RequestBody AddOrderSellRequest request)
     {
         AddOrderSellResponse response = new AddOrderSellResponse();

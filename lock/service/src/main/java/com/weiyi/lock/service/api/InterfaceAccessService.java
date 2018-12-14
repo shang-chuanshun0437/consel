@@ -9,6 +9,8 @@ public interface InterfaceAccessService
 {
     void addRecord(InterfaceAccess interfaceAccess);
 
+    void deleteRecord(int id);
+
     void updateRecord(InterfaceAccess interfaceAccess);
 
     List<InterfaceAccess> queryList(GetInterfaceAccessRequest request);

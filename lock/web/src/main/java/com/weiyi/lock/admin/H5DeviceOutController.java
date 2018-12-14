@@ -38,7 +38,7 @@ public class H5DeviceOutController
      */
     @RequestMapping(value = "/updateDevice",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public UpdateDeviceResponse updateDevice(@RequestBody UpdateDeviceRequest request)
     {
         UpdateDeviceResponse response = new UpdateDeviceResponse();
@@ -85,7 +85,7 @@ public class H5DeviceOutController
     */
     @RequestMapping(value = "/queryDeviceList",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryDeviceResponse queryDeviceList(@RequestBody QueryDeviceOutRequest request)
     {
         QueryDeviceResponse response = new QueryDeviceResponse();
@@ -130,7 +130,7 @@ public class H5DeviceOutController
      */
     @RequestMapping(value = "/replaceDevice",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public ReplaceDeviceResponse replaceDevice(@RequestBody ReplaceDeviceRequest request)
     {
         ReplaceDeviceResponse response = new ReplaceDeviceResponse();

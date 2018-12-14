@@ -43,7 +43,7 @@ public class H5OpenHistoryController
     */
     @RequestMapping(value = "/query/list",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryOpenHistoryResponse queryOpenHistory(@RequestBody QueryOpenHistoryRequest request)
     {
         QueryOpenHistoryResponse response = new QueryOpenHistoryResponse();

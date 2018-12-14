@@ -4,6 +4,10 @@ public class QueryUserOpenHistoryRequest extends BaseRequest
 {
     private Long deviceNum;
 
+    private String deviceName;
+
+    private Long needPhone;
+
     private Integer currentPage;
 
     private Integer pageSize;
@@ -30,5 +34,21 @@ public class QueryUserOpenHistoryRequest extends BaseRequest
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
+    }
+
+    public void setDeviceName(String deviceName) {
+        this.deviceName = deviceName;
+    }
+
+    public Long getNeedPhone() {
+        return needPhone;
+    }
+
+    public void setNeedPhone(Long needPhone) {
+        this.needPhone = needPhone;
     }
 }

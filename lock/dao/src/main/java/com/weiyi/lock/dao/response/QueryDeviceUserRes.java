@@ -1,5 +1,7 @@
 package com.weiyi.lock.dao.response;
 
+import com.weiyi.lock.common.utils.TimeUtil;
+
 public class QueryDeviceUserRes
 {
     private Long userPhone;
@@ -47,7 +49,7 @@ public class QueryDeviceUserRes
     }
 
     public String getExpiryDate() {
-        return expiryDate;
+        return TimeUtil.getDateTime(expiryDate);
     }
 
     public void setExpiryDate(String expiryDate) {
@@ -55,7 +57,7 @@ public class QueryDeviceUserRes
     }
 
     public String getCreateTime() {
-        return createTime;
+        return TimeUtil.getDateTime(createTime);
     }
 
     public void setCreateTime(String createTime) {

@@ -18,34 +18,50 @@
     </insert>
 
     <select id="queryOpenHistory" parameterType="com.weiyi.lock.dao.request.GetOpenHistoryRequest" resultType="com.weiyi.lock.dao.entity.OpenDoorHistory">
-        select * from open_history
+        select * from
+        (SELECT h.device_num,h.device_name,h.user_phone,h.user_name,h.open_time
+        from open_history h,device_out d
+        where (d.owner_phone = #{userPhone} and d.device_num=h.device_num)
+        UNION
+        SELECT h.device_num,h.device_name,h.user_phone,h.user_name,h.open_time
+        from open_history h,user_device u
+        where (u.user_phone = #{userPhone} and u.device_num=h.device_num)) as t
         <where>
             <if test="deviceNum != null and deviceNum != ''">
-                device_num = #{deviceNum}
+                t.device_num = #{deviceNum}
             </if>
-            <if test="userPhone != null and userPhone != ''">
-                AND user_phone = #{userPhone}
+            <if test="deviceName != null and deviceName != ''">
+                t.device_name LIKE concat(concat('%',#{deviceName}),'%')
+            </if>
+            <if test="needPhone != null and needPhone != ''">
+                AND t.user_phone = #{needPhone}
             </if>
             <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
-                AND create_time between #{startTime} and #{endTime}
+                AND t.open_time between #{startTime} and #{endTime}
             </if>
         </where>
-        ORDER BY open_time DESC
+        ORDER BY t.open_time DESC
         limit #{currentPage},#{pageSize}
     </select>
 
     <select id="queryOpenHistoryCount" parameterType="com.weiyi.lock.dao.request.GetOpenHistoryRequest" resultType="int">
-        select count(*)
-        from open_history
+        select count(*) from
+        (SELECT h.device_num,h.device_name,h.user_phone,h.user_name,h.open_time
+        from open_history h,device_out d
+        where (d.owner_phone = #{userPhone} and d.device_num=h.device_num)
+        UNION
+        SELECT h.device_num,h.device_name,h.user_phone,h.user_name,h.open_time
+        from open_history h,user_device u
+        where (u.user_phone = #{userPhone} and u.device_num=h.device_num)) as t
         <where>
             <if test="deviceNum != null and deviceNum != ''">
-                device_num = #{deviceNum}
+                t.device_num = #{deviceNum}
             </if>
-            <if test="userPhone != null and userPhone != ''">
-                AND user_phone = #{userPhone}
+            <if test="needPhone != null and needPhone != ''">
+                AND t.user_phone = #{needPhone}
             </if>
             <if test="startTime != null and endTime != null and startTime != '' and endTime != ''">
-                AND create_time between #{startTime} and #{endTime}
+                AND t.open_time between #{startTime} and #{endTime}
             </if>
         </where>
     </select>

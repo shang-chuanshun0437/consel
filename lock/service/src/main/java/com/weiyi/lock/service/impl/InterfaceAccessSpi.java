@@ -29,6 +29,15 @@ public class InterfaceAccessSpi implements InterfaceAccessService
         interfaceAccessMapper.addRecord(interfaceAccess);
     }
 
+    public void deleteRecord(int id) {
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("inter deleteRecord() func,the id is :{}",id);
+        }
+
+        interfaceAccessMapper.deleteRecord(id);
+    }
+
     public void updateRecord(InterfaceAccess interfaceAccess) {
         if (logger.isDebugEnabled())
         {

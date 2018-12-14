@@ -40,7 +40,7 @@ public class H5RoleController
 
     @RequestMapping(value = "/addRole",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public AddRoleResponse addRole(@RequestBody AddRoleRequest request)
     {
         AddRoleResponse response = new AddRoleResponse();
@@ -65,7 +65,7 @@ public class H5RoleController
 
     @RequestMapping(value = "/queryList",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryRoleResponse queryRole(@RequestBody QueryRoleRequest request)
     {
         QueryRoleResponse response = new QueryRoleResponse();
@@ -102,7 +102,7 @@ public class H5RoleController
 
     @RequestMapping(value = "/updateRole",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public UpdateRoleResponse updateRole(@RequestBody UpdateRoleRequest request)
     {
         UpdateRoleResponse response = new UpdateRoleResponse();
@@ -125,7 +125,7 @@ public class H5RoleController
 
     @RequestMapping(value = "/deleteRole",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public DeleteRoleResponse deleteRole(@RequestBody DeleteRoleRequest request)
     {
         DeleteRoleResponse response = new DeleteRoleResponse();

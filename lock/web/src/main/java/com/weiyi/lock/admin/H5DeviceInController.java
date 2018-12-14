@@ -39,7 +39,7 @@ public class H5DeviceInController
     */
     @RequestMapping(value = "/deviceIn/addDevice",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public AddDeviceInResponse addDevice(@RequestBody AddDeviceInRequest request)
     {
         AddDeviceInResponse response = new AddDeviceInResponse();
@@ -77,7 +77,7 @@ public class H5DeviceInController
      */
     @RequestMapping(value = "/deviceIn/queryList",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryDeviceInResponse queryDeviceInList(@RequestBody QueryDeviceInRequest request)
     {
         QueryDeviceInResponse response = new QueryDeviceInResponse();
@@ -114,7 +114,7 @@ public class H5DeviceInController
      */
     @RequestMapping(value = "/deviceIn/deleteDevice",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public DeleteDeviceInResponse deleteDevice(@RequestBody DeleteDeviceInRequest request)
     {
         DeleteDeviceInResponse response = new DeleteDeviceInResponse();
@@ -136,7 +136,7 @@ public class H5DeviceInController
      */
     @RequestMapping(value = "/deviceIn/updateDevice",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public UpdateDeviceInResponse updateDevice(@RequestBody UpdateDeviceInRequest request)
     {
         UpdateDeviceInResponse response = new UpdateDeviceInResponse();
@@ -166,7 +166,7 @@ public class H5DeviceInController
      */
     @RequestMapping(value = "/deviceIn/outOfDevice",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public OutOfDeviceInResponse outOfDevice(@RequestBody OutOfDeviceInRequest request)
     {
         OutOfDeviceInResponse response = new OutOfDeviceInResponse();

@@ -22,6 +22,9 @@
        	VALUES
        		(#{userPhone}, #{interfaceName},#{status}, #{consumeTime},#{remark},#{createTime},#{url},#{ip},#{interfaceCount},#{averageTime})
     </insert>
+    <delete id="deleteRecord" parameterType="int">
+        delete from interface_access where id = #{id}
+    </delete>
 
     <select id="queryListCount" parameterType="com.weiyi.lock.dao.request.GetInterfaceAccessRequest" resultType="int">
         select count(*)

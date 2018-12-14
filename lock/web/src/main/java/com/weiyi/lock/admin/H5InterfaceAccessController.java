@@ -36,7 +36,7 @@ public class H5InterfaceAccessController
     */
     @RequestMapping(value = "/queryList",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryInterfaceAccessResponse queryList(@RequestBody QueryInterfaceAccessRequest request)
     {
         QueryInterfaceAccessResponse response = new QueryInterfaceAccessResponse();

@@ -38,7 +38,7 @@ public class H5ReplaceOrderController
     */
     @RequestMapping(value = "/query/replace/list",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryOrderSellResponse queryReplaceOrder(@RequestBody QueryOrderSellRequest request)
     {
         QueryOrderSellResponse response = new QueryOrderSellResponse();

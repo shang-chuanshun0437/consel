@@ -25,8 +25,8 @@ public class AliDayunSms
     private static final String PRODUCT = "Dysmsapi";
     private static final String DOMAIN = "dysmsapi.aliyuncs.com";
 
-    private static final String ACCESS_KEY_ID = "LTAIx7uoDy0QLp8A";
-    private static  final String ACCESS_KEY_SECRET = "RRnOxIGefGOidXlJvAktIRamcHRdg3";
+    private static final String ACCESS_KEY_ID = "2LTAIx7uoDy0QLp8A";
+    private static  final String ACCESS_KEY_SECRET = "LRRnOxIGefGOidXlJvAktIRamcHRdg3";
 
     /*入参:
     * @signName 短信签名  可在短信控制台中找到

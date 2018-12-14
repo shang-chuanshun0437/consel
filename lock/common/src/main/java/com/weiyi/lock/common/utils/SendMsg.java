@@ -11,10 +11,10 @@ import java.security.NoSuchAlgorithmException;
 public class SendMsg
 {
 	//账号  禁止修改
-	private static final String USER_NAME = "mlboydotcom";
+	private static final String USER_NAME = "amlboydotcom";
 
 	//密码  禁止修改
-	private static final String PASSWORD = "20000522";
+	private static final String PASSWORD = "120000522";
 
 	//请求的URL  禁止修改（国内）
 	private static final String DOMESTIC_URL = "http://api.smsbao.com/sms";

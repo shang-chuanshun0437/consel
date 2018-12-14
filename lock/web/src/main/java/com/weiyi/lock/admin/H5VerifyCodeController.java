@@ -31,7 +31,7 @@ public class H5VerifyCodeController
 
     @RequestMapping(value = "/query/list",method = {RequestMethod.POST})
     @ResponseBody
-    @SecurityAnnotation()
+    @SecurityAnnotation(value = {"ADMIN"})
     public QueryVerifyCodeResponse queryCode(@RequestBody QueryVerifyCodeRequest request)
     {
         QueryVerifyCodeResponse response = new QueryVerifyCodeResponse();

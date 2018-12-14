@@ -94,9 +94,11 @@ public class SecurityInterceptor
         if (interfaceAccess == null)
         {
             interfaceAccess = new InterfaceAccess();
-            interfaceAccess.setUserPhone(baseRequest.getUserPhone());
-            interfaceAccess.setInterfaceName(interfaceName);
+            interfaceAccess.setAverageTime(new Long(0));
+            interfaceAccess.setInterfaceCount(new Long(0));
         }
+        interfaceAccess.setUserPhone(baseRequest.getUserPhone());
+        interfaceAccess.setInterfaceName(interfaceName);
         interfaceAccess.setStatus(Constant.SUCCESS);
         interfaceAccess.setRemark("SUCCESS");
         interfaceAccess.setCreateTime(TimeUtil.getCurrentTime());
@@ -127,18 +129,16 @@ public class SecurityInterceptor
             //调用该方法才会进入注解的方法
             Object object = proceedingJoinPoint.proceed();
 
-            interfaceAccess.setConsumeTime(System.currentTimeMillis() - startTime);
-            //数据库中没有这条记录，有 则更新，没有 则插入
-            if (interfaceAccess.getId() == null)
+            //数据库中是否存在这条记录，有 则先删除后插入
+            if (interfaceAccess.getId() != null)
             {
-                interfaceAccess.setAverageTime(interfaceAccess.getConsumeTime());
-                interfaceAccess.setInterfaceCount(1L);
-                interfaceAccessService.addRecord(interfaceAccess);
-            } else {
-                interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
-                interfaceAccess.setAverageTime((interfaceAccess.getAverageTime() + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
-                interfaceAccessService.updateRecord(interfaceAccess);
+                interfaceAccessService.deleteRecord(interfaceAccess.getId());
             }
+            interfaceAccess.setConsumeTime(System.currentTimeMillis() - startTime);
+            Long oldTotal = interfaceAccess.getInterfaceCount() * interfaceAccess.getAverageTime();
+            interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
+            interfaceAccess.setAverageTime((oldTotal + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
+            interfaceAccessService.addRecord(interfaceAccess);
             return object;
         }
         else
@@ -160,17 +160,15 @@ public class SecurityInterceptor
                     Object object = proceedingJoinPoint.proceed();
 
                     interfaceAccess.setConsumeTime(System.currentTimeMillis() - startTime);
-                    //数据库中没有这条记录，有 则更新，没有 则插入
-                    if (interfaceAccess.getId() == null)
+                    //数据库中是否存在这条记录，有 则先删除后插入
+                    if (interfaceAccess.getId() != null)
                     {
-                        interfaceAccess.setAverageTime(interfaceAccess.getConsumeTime());
-                        interfaceAccess.setInterfaceCount(1L);
-                        interfaceAccessService.addRecord(interfaceAccess);
-                    } else {
-                        interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
-                        interfaceAccess.setAverageTime((interfaceAccess.getAverageTime() + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
-                        interfaceAccessService.updateRecord(interfaceAccess);
+                        interfaceAccessService.deleteRecord(interfaceAccess.getId());
                     }
+                    Long oldTotal = interfaceAccess.getInterfaceCount() * interfaceAccess.getAverageTime();
+                    interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
+                    interfaceAccess.setAverageTime((oldTotal + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
+                    interfaceAccessService.addRecord(interfaceAccess);
                     return object;
                 }
             }
@@ -199,17 +197,15 @@ public class SecurityInterceptor
         interfaceAccess.setConsumeTime(System.currentTimeMillis() - startTime);
         interfaceAccess.setRemark(remark);
 
-        //数据库中没有这条记录，有 则更新，没有 则插入
-        if (interfaceAccess.getId() == null)
+        //数据库中是否存在这条记录，有 则先删除后插入
+        if (interfaceAccess.getId() != null)
         {
-            interfaceAccess.setAverageTime(interfaceAccess.getConsumeTime());
-            interfaceAccess.setInterfaceCount(1L);
-            interfaceAccessService.addRecord(interfaceAccess);
-        } else {
-            interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
-            interfaceAccess.setAverageTime((interfaceAccess.getAverageTime() + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
-            interfaceAccessService.updateRecord(interfaceAccess);
+            interfaceAccessService.deleteRecord(interfaceAccess.getId());
         }
+        Long oldTotal = interfaceAccess.getInterfaceCount() * interfaceAccess.getAverageTime();
+        interfaceAccess.setInterfaceCount(interfaceAccess.getInterfaceCount() + 1);
+        interfaceAccess.setAverageTime((oldTotal + interfaceAccess.getConsumeTime()) / interfaceAccess.getInterfaceCount());
+        interfaceAccessService.addRecord(interfaceAccess);
 
         return response;
     }

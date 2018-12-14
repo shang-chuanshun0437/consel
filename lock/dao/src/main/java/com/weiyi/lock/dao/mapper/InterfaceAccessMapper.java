@@ -11,6 +11,8 @@ public interface InterfaceAccessMapper
 {
     void addRecord(InterfaceAccess interfaceAccess);
 
+    void deleteRecord(int id);
+
     void updateRecord(InterfaceAccess interfaceAccess);
 
     int queryListCount(GetInterfaceAccessRequest request);

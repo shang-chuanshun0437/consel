@@ -12,6 +12,8 @@ public class GetOpenHistoryRequest extends OpenDoorHistory
 
     private String endTime;
 
+    private Long needPhone;
+
     public int getCurrentPage() {
         return currentPage;
     }
@@ -42,5 +44,13 @@ public class GetOpenHistoryRequest extends OpenDoorHistory
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Long getNeedPhone() {
+        return needPhone;
+    }
+
+    public void setNeedPhone(Long needPhone) {
+        this.needPhone = needPhone;
     }
 }
